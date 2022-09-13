@@ -1,11 +1,8 @@
-import hashlib
-import json
-from textwrap import dedent
-from time import time
-from uuid import uuid4
-from blockchain import Blockchain
 
+from textwrap import dedent
+from uuid import uuid4
 from flask import Flask, jsonify, request
+from blockchain import Blockchain
 # Instantiate our Node
 app = Flask(__name__)
 
