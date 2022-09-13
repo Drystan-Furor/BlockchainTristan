@@ -1,5 +1,6 @@
+from datetime import time
 import hashlib
-from blockchain import Block
+
 class Blockchain(object):
 
     def __init__(self):
@@ -7,7 +8,24 @@ class Blockchain(object):
         self.current_transactions = []
         # Create the genesis block
         self.new_block(previous_hash=1, proof=100)
+  
+  
+    def new_block(self, proof, previous_hash=None):
 
+        block = {
+            'index': len(self.chain) + 1,
+            'timestamp': time(),
+            'transactions': self.current_transactions,
+            'proof': proof,
+            'previous_hash': previous_hash or self.hash(self.chain[-1]),
+        }
+
+        # Reset the current list of transactions
+        self.current_transactions = []
+
+        self.chain.append(block)
+        return block
+    
     @property
     def last_block(self):
         return self.chain[-1]
@@ -40,4 +58,5 @@ class Blockchain(object):
         guess_hash = hashlib.sha256(guess).hexdigest()
         # To adjust the difficulty of the algorithm, we could modify the number of leading zeroes. But 4 is sufficient.
         return guess_hash[:4] == "0000"
+
 

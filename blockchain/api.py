@@ -1,9 +1,9 @@
 import hashlib
 import json
-from blockchain import Blockchain
 from textwrap import dedent
 from time import time
 from uuid import uuid4
+from blockchain import Blockchain
 
 from flask import Flask, jsonify, request
 # Instantiate our Node
@@ -14,7 +14,6 @@ node_identifier = str(uuid4()).replace('-', '')
 
 # Instantiate the Blockchain
 blockchain = Blockchain()
-
 
 @app.route('/mine', methods=['GET'])
 def mine():
