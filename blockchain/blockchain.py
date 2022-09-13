@@ -1,12 +1,22 @@
-from datetime import datetime
+class Blockchain(object):
+    def __init__(self):
+        self.chain = []
+        self.current_transactions = []
 
-class Blockchain:
-    def __init__(self) -> None:
+    def new_block(self):
+        # Creates a new Block and adds it to the chain
         pass
-    
-    def create_genesis_block():
-            block = Block(index=0,
-                  timestamp=datetime.now(),
-                  data="Genesis Block",
-                  previous_hash="0")
-    return block
+
+    def new_transaction(self):
+        # Adds a new transaction to the list of transactions
+        pass
+
+    @staticmethod
+    def hash(block):
+        # Hashes a Block
+        pass
+
+    @property
+    def last_block(self):
+        # Returns the last Block in the chain
+        pass
