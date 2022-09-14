@@ -4,7 +4,10 @@ Demo blockchain app by Dave Ligthart.
 
 ## Install
 
+`pip install virtualenv`
+`pip install pipenv`
 `pipenv install`
+`pip3 install colorama`
 
 ## Run
 
