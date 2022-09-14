@@ -23,3 +23,5 @@ def create_app(config: dict = None) -> Flask:
         return 'healthy'
 
     return app
+
+#_blockchain/Scripts/Activate 

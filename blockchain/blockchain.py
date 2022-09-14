@@ -1,3 +1,4 @@
+import hashlib
 from blockchain.block import Block
 from multiprocessing import Pool
 import os
@@ -5,48 +6,32 @@ import time
 import sys
 
 class Blockchain:
-    difficulty = 5
-    max_workers = 4
-    pool = None
-    batch_size = int(2.5e5)
-
-    def __init__(self) -> None:
-        self.pool = Pool(processes=Blockchain.max_workers)     
-
-    def createProof(block:Block, start_nonce:int, end_nonce:int):
-        block.nonce = start_nonce
-
-        hash = ''
-        
-        print('Searched from %d to %d' % (start_nonce, end_nonce))
-
-        for nonce in range(start_nonce, end_nonce):
-            block.nonce = nonce
-            hash = block.hash()
-            if hash.startswith('0' * Blockchain.difficulty):
-                return hash
-        
-        return None    
+    block = Block()
     
-    def startProcess(args):
-        block, nonce_range = args
-        return Blockchain.createProof(block, nonce_range[0], nonce_range[1])
+    def proof_of_work(self, last_proof):
+        """
+        Simple Proof of Work Algorithm:
+         - Find a number p' such that hash(pp') contains leading 4 zeroes, where p is the previous p'
+         - p is the previous proof, and p' is the new proof
+        :param last_proof: <int>
+        :return: <int>
+        """
 
-    def mineAsync(self, block:Block) -> str:
-        
-        nonce = 0
+        proof = 0
+        while self.valid_proof(last_proof, proof) is False:
+            proof += 1
 
-        while True:    
-            nonce_ranges = [
-                (nonce + i * self.batch_size, nonce + (i+1) * self.batch_size)
-                for i in range(self.max_workers)
-            ]
+        return proof
 
-            params = [
-                (block, nonce_range) for nonce_range in nonce_ranges
-            ]
-            
-            for result in self.pool.imap_unordered(Blockchain.startProcess, params):
-                if result is not None: return result
+    @staticmethod
+    def valid_proof(last_proof, proof):
+        """
+        Validates the Proof: Does hash(last_proof, proof) contain 4 leading zeroes?
+        :param last_proof: <int> Previous Proof
+        :param proof: <int> Current Proof
+        :return: <bool> True if correct, False if not.
+        """
 
-            nonce += self.max_workers * self.batch_size
+        guess = f'{last_proof}{proof}'.encode()
+        guess_hash = hashlib.sha256(guess).hexdigest()
+        return guess_hash[:4] == "0000"
