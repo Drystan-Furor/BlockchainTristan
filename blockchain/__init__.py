@@ -12,7 +12,7 @@ node_identifier = str(uuid4()).replace('-', '')
 # Instantiate the Blockchain
 blockchain = Blockchain()
 
-def create_app(config: dict = None) -> Flask:
+def create_app(config: dict = None) -> Flask: 
     # Instantiate the Node
     # app = Flask(__name__)
     # create
