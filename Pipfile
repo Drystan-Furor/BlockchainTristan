@@ -9,6 +9,7 @@ requests = "*"
 pytest = "*"
 coverage = "*"
 pytest-cov = "*"
+merkletools = "*"
 
 [dev-packages]
 

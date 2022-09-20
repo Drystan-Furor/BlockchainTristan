@@ -1,20 +1,10 @@
 from queue import Empty
-from flask import Flask, request
 from blockchain.blockchain import Blockchain
-from uuid import uuid4
-from flask import Flask
+from flask import Flask, request
 
+# flask will automatically detect this function
+def create_app(config: dict = None) -> Flask:
 
-
-# Generate a globally unique address for this node
-node_identifier = str(uuid4()).replace('-', '')
-
-# Instantiate the Blockchain
-blockchain = Blockchain()
-
-def create_app(config: dict = None) -> Flask: 
-    # Instantiate the Node
-    # app = Flask(__name__)
     # create
     app = Flask(__name__, instance_relative_config=True)
     
@@ -33,5 +23,9 @@ def create_app(config: dict = None) -> Flask:
     @app.route('/healthz')
     def ping():
         return 'healthy'
+
+    blockchain = Blockchain()
+    blockchain.create_first_block()
+    app.blockchain = blockchain
 
     return app

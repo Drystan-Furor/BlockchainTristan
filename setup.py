@@ -8,6 +8,7 @@ setup(
     install_requires=[
         'flask',
         'pytest',
-        'pytest-cov'
+        'pytest-cov',
+        'merkletools'
     ],
 )
