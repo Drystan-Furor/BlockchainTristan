@@ -4,7 +4,8 @@ from flask import Flask, request
 
 # flask will automatically detect this function
 def create_app(config: dict = None) -> Flask:
-
+    # Instantiate the Node
+    # app = Flask(__name__)
     # create
     app = Flask(__name__, instance_relative_config=True)
     
@@ -24,8 +25,10 @@ def create_app(config: dict = None) -> Flask:
     def ping():
         return 'healthy'
 
+    # Instantiate the Blockchain
     blockchain = Blockchain()
     blockchain.create_first_block()
     app.blockchain = blockchain
+    # Generate a globally unique address for this node
 
     return app

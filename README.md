@@ -5,6 +5,7 @@ Demo blockchain app by Dave Ligthart.
 ## Install
 
 `pipenv install`
+`pip install merkletools`
 
 ## Run
 
