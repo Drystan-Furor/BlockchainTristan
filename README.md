@@ -1,27 +1,9 @@
-# blockchain-demo
+##Opdracht 2 Blocks 
+Vraag: Waarom is de timestamp belangrijk?
+Antwoord: een timestamp is belangrijk zodat anderen geen invloed kunnen hebben over 
+wanneer de data (transactie) is aangemaakt. 
 
-Demo blockchain app by Dave Ligthart.
+Door de timestamp mee tenemen in de hash wordt het een waarheid binnen de blockchain, dus als de timestamp
+aangepast zal worden, dan kloppen de hasheh en previuos hashes niet meer.
 
-## Install
-
-`pipenv install`
-`pip install merkletools`
-
-## Run
-
-`pipenv shell`
-
-`FLASK_APP=blockchain flask run`
-
-or `flask --app blockchain run`
-
-`open http://127.0.0.1:5000/api/v1/blocks`
-
-## Test
-
-`pipenv shell`
-
-`py.test`
-
-**with output**
-`py.test -s`
+flask --app blockchain --debug run

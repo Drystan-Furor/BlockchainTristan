@@ -1,44 +1,29 @@
-import time
-from blockchain.block import Block
-from blockchain.transaction import Transaction
-from hashlib import sha256
-from merkletools import MerkleTools
+from ..blockchain.block import block
+from ..blockchain.blockchain import blockchain
 
-def test_block_with_no_tx():
-    block = Block(1, [], 0, 1662843237.224394, 0)
-    assert block.index == 1
-    assert len(block.txs) == 0
-    assert block.timestamp == 1662843237.224394
-    assert block.previous_hash == 0
-    assert block.nonce == 0
 
-def test_create_hash_with_no_tx():
-    block = Block(1, [], 0, 1662843237.224394, 0)
-    
-    assert not len(block.txs)
-    assert block.create_hash() == '5958b1b47b8ca2aae7276c9d8c3a2243b0ec98a630493088c2d4389269f4aba2'
+class TestBlock:
+    def test_generate_block(self):
+        test_blockchain = [
+            {
+                "current_block_hash": "ee7de4f21aca73a82fddd86f8b3163c2d24b7ee6b45388cc8fe2b1b0659ed9bb",
+                "data": {
+                    "current_time_stamp": "Sun, 18 Sep 2022 20:19:50 GMT",
+                    "transaction_data": {
+                        "amount": 50000,
+                        "recieve_acount_id": 2,
+                        "send_acount_id": 1
+                        }
+                    },
+                    "index": 1,
+                    "previous_block_hash": "",
+                    "proof": 1342,
+                    "timestamp": "Sun, 18 Sep 2022 20:19:53 GMT"
+                    }
+                    ]
+        assert type(block.Block(1, "transaction").create_block(test_blockchain)) == dict
 
-def test_create_hash_with_tx():
-    txs = []
-    txs.append(Transaction('first', 1))
-    txs.append(Transaction('second', 2))
-    block = Block(1, txs, 0, 1662843237.224394, 0)
-    
-    assert len(block.txs)
-    assert block.create_hash()
-
-def test_create_merkle_root():
-    txs = []
-    txs.append(Transaction('first', 1))
-    txs.append(Transaction('second', 2))
-    block = Block(1, txs, 0, 1662843237.224394, 0)
-    block.create_hash()
-
-    mt = MerkleTools(hash_type="SHA256")
-
-    for tx in txs: 
-        mt.add_leaf(tx.hash) 
-           
-    mt.make_tree()
+    def test_generate_block_empty_chain(self):
         
-    assert mt.get_merkle_root() == block.merkle_root
+        assert type(block.Block(1, "transaction").create_block([])) == dict
+

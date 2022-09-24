@@ -1,48 +1,97 @@
-import time
-from blockchain.block import Block
-from blockchain.blockchain import Blockchain
+import requests
+from ..blockchain.blockchain import blockchain
+from ..blockchain.mempool import mempool
 
-def test_mine_async():
-    block = Block(1, [], 0, 1662843237.000001, 0)
-    blockchain = Blockchain()
-    nonce, hash = blockchain.mine(block)
-    
-    assert nonce > 0
-    assert hash.startswith('0' * Blockchain.difficulty)
+from flask import Flask, current_app
+import json
 
-def test_add_block():
-    blockchain = Blockchain()
-    first_block = blockchain.create_first_block()
-    
-    assert len(first_block.hash) > 0
-    assert first_block.index == 0
-    assert len(blockchain.chain) == 1
-    
-    block = Block(len(blockchain.chain) + 1, [], blockchain.last_block.hash, 1662843238.000002, 0)
-    block.nonce, proof = blockchain.mine(block)
-    
-    blockchain.add_block(block, proof)
-    
-    assert len(blockchain.chain) == 2
+class TestBlock:
+    def create(self):
+        app = Flask(__name__)
+        with app.app_context():
+            assert blockchain.Blockchain().create().status_code == 200
 
-def test_validate_chain():
-    blockchain = Blockchain()
-    blockchain.create_first_block()
+    def test_add_block(self):
+        app = Flask(__name__)
+        test_blockchain = [
+            {
+                "current_block_hash": "14acb6dac20a03cf611f0a12c7746721673fb61022bd7ff58f88692088ac9371",
+                "data": "transaction",
+                "index": 1,
+                "previous_block_hash": "",
+                "timestamp": "Thu, 15 Sep 2022 21:10:30 GMT"
+            }
+        ] 
 
-    block = Block(len(blockchain.chain) + 1, [], blockchain.last_block.hash, 1662843238.000002, 0)
-    block.nonce, proof = blockchain.mine(block)
-    blockchain.add_block(block, proof)
+        with app.app_context():
+            test_mempool = mempool.Mempool()
+            assert blockchain.Blockchain(test_blockchain).add_block(test_mempool).status_code == 200
+            
+    def test_add_block_to_empty_chain(self): 
+        app = Flask(__name__)
+        test_blockchain = [] 
 
-    block = Block(len(blockchain.chain) + 1, [], blockchain.last_block.hash, 1662843238.000003, 0)
-    block.nonce, proof = blockchain.mine(block)
-    blockchain.add_block(block, proof)
+        with app.app_context():
+            test_mempool = mempool.Mempool()
+            assert blockchain.Blockchain(test_blockchain).add_block(test_mempool).status_code == 200
 
-    assert blockchain.validate_chain()
+    def test_index(self):
+        assert type(blockchain.Blockchain().list()) == list
 
-    # manipulate block by changing the previous hash:
-    block = Block(len(blockchain.chain) + 1, [], blockchain.chain[1].hash, 1662843239.000004, 0)
-    block.nonce, proof = blockchain.mine(block)
-    blockchain.add_block(block, proof)
+    def test_reset(self):
+        app = Flask(__name__)
+        with app.app_context():
+            assert blockchain.Blockchain().reset().status_code == 200
 
-    # should still be valid
-    assert blockchain.validate_chain()
+    def test_create(self):
+        app = Flask(__name__)
+        with app.app_context():
+            transaction_data = {
+                "transaction_data": {
+                    "amount": 50000,
+                    "recieve_acount_id": 2,
+                    "send_acount_id": 1
+                }
+            }
+            assert type(blockchain.Blockchain().create(transaction_data)) == list
+
+    def test_add_block(self):
+        app = Flask(__name__)
+        with app.app_context():
+            transaction_data = {
+                "transaction_data": {
+                    "amount": 500000,
+                    "recieve_acount_id": 2,
+                    "send_acount_id": 1
+                    }
+                }        
+            transaction_data_2 = {
+                "transaction_data": {
+                    "amount": 50000,
+                    "recieve_acount_id": 2,
+                    "send_acount_id": 1
+                    }
+                }                
+            test_mempool = mempool.Mempool()
+            test_mempool.add_new_transaction_to_mempool(transaction_data)
+            test_mempool.add_new_transaction_to_mempool(transaction_data_2)
+
+            test_blockchain = blockchain.Blockchain()
+            test_blockchain.create(transaction_data)
+            assert type(test_blockchain.add_block(test_mempool)) == list
+
+
+    def test_add_block_empty_blockchain(self):
+        app = Flask(__name__)
+        with app.app_context():
+            transaction_data = {
+                "transaction_data": {
+                    "amount": 50000,
+                    "recieve_acount_id": 2,
+                    "send_acount_id": 1
+                    }
+                }
+                
+            test_mempool = mempool.Mempool()
+            test_mempool.add_new_transaction_to_mempool(transaction_data)
+            assert type(blockchain.Blockchain().add_block(test_mempool)) == list

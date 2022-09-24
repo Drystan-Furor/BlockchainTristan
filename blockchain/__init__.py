@@ -1,34 +1,41 @@
-from queue import Empty
-from blockchain.blockchain import Blockchain
-from flask import Flask, request
+import os
 
-# flask will automatically detect this function
-def create_app(config: dict = None) -> Flask:
-    # Instantiate the Node
-    # app = Flask(__name__)
-    # create
-    app = Flask(__name__, instance_relative_config=True)
-    
-    # configure
-    # ...
+from flask import Flask, jsonify, make_response, request
+from .blockchain.blockchain import Blockchain
+from .mempool.mempool import Mempool
+from .transaction.transaction import Transaction
+from .validate_blockchain.validate_blockchain import ValidateBlockchain
 
-    if config is None:
-        app.config.from_pyfile('config.py', silent=True)
-    else:
-        app.config.from_mapping(config)
 
-    # add blueprint
-    from . import api
-    app.register_blueprint(api.bp)
-
-    @app.route('/healthz')
-    def ping():
-        return 'healthy'
-
-    # Instantiate the Blockchain
+def create_app(test_config=None):
+    app = Flask(__name__)
     blockchain = Blockchain()
-    blockchain.create_first_block()
-    app.blockchain = blockchain
-    # Generate a globally unique address for this node
+    mempool = Mempool()
+    transaction = Transaction(mempool)
+    base_url = "/api/v1/"
+
+    @app.get(base_url + 'block/create')
+    def add_block_to_chain():
+        return Blockchain.add_block(blockchain, mempool)
+
+    @app.get(base_url + 'blockchain/list')
+    def blockchain_index():
+        return Blockchain.list(blockchain)
+
+    @app.get(base_url + 'blockchain/reset')
+    def reset_blockchain():
+        return Blockchain.reset(blockchain)
+
+    @app.route(base_url + 'transaction/create', methods=['POST'])
+    def transaction_create():
+        return transaction.transaction_create(request.json)
+
+    @app.get(base_url + 'mempool/index')
+    def get_mempool():
+        return Mempool.index(mempool)
+
+    @app.get(base_url + 'blockchain/validate')
+    def validate_blockchain():
+        return ValidateBlockchain().validate(blockchain.list())
 
     return app
