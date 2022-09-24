@@ -3,11 +3,11 @@ from flask import jsonify, make_response
 
 class Mempool():
     def __init__(self):
-        self.mempool_list = []
+        self.list = []
 
     def add_new_transaction_to_mempool(self, data):
-        self.mempool_list.append(data)
+        self.list.append(data)
         return self.index()
 
     def index(self):
-        return make_response(jsonify(self.mempool_list), 200)
+        return make_response(jsonify(self.list), 200)
