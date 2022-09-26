@@ -21,7 +21,7 @@ class Transaction():
             }
 
             transaction_data = {
-                "current_time_stamp": datetime.datetime.now(),
+                "current_timestamp": datetime.datetime.now(),
                 "transaction_data": transaction_information
             }
 

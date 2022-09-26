@@ -1,32 +1,12 @@
-1. Maak een API
-2. Toevoegen block aan chain en ophalen van blocks via API
-3. Code coverage
-4. CI workflow GitHub toevoegen
-5. Toevoegen van transaction via API
-6. Maak Proof of Work
-7. Toevoegen block via API
-8. Functies voor het valideren van de chain / blocks
-9. Consensus algoritme 
+### Blockchain
 
+> Een Blockchain is een *immutable, sequential* [Onveranderlijk] ketting van archieven of "records"
+Die we Blocks noemen, ketting is in het Engels "chain", aldus Blockchain.
+Ze kunnen transacties bevatten, bestanden, of andere data. het belangrijkste is dat de ze als ketting worden 
+verbonden door het gebruik van *hashes*.
 
-
-3 oktober start
-
-Susan Saris.
-
-Ron, Bram.
-
-Henriëtte op kantoor
-Samenkomst op kantoor
-Relaxed beginnen
-
-1e dag stand-up niet nodig
-laptop ophalen, rondleiding.
-10:00 haalbaar.
-10:30 ook goed.
-
-10:30 - eerste dag.
-
-11:00 H een afspraak.
-samen lunchen.
-paspoort mee te nemen.
+hashfunctie
+: Een hashfunctie is gewoon een functie die invoerwaarde inneemt en uit die invoer een 
+uitvoerwaarde creëert die deterministisch is voor de invoerwaarde. Voor elke x-invoerwaarde 
+ontvangt u altijd dezelfde y-uitvoerwaarde wanneer de hash-functie wordt uitgevoerd. 
+Op deze manier heeft elke input een bepaalde output.

@@ -24,11 +24,12 @@ work consensus.
 *blockchain*
 >A list of validated blocks, each linking to its predecessor all the way to the genesis
 block.
-Byzantine Generals Problem
-A reliable computer system must be able to cope with the failure of one or more
+___
+_Byzantine Generals Problem_
+>A reliable computer system must be able to cope with the failure of one or more
 of its components. A failed component may exhibit a type of behavior that is
 often overlooked—namely, sending conflicting information to different parts of
-xxiii the system. The problem of coping with this type of failure is expressed abstractly
+the system. The problem of coping with this type of failure is expressed abstractly
 as the Byzantine Generals Problem.
 ---
 *coinbase*

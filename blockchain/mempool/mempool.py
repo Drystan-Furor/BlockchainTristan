@@ -7,7 +7,7 @@ class Mempool():
 
     def add_new_transaction_to_mempool(self, data):
         self.list.append(data)
-        return self.index()
+        return self.mempool_list()
 
-    def index(self):
+    def mempool_list(self):
         return make_response(jsonify(self.list), 200)
