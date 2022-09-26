@@ -14,3 +14,5 @@ We maken gebruik van python als programmeertaal.
 We doen een deep dive in de technologie van bitcoin om inzicht te krijgen in
 de fundamenten van een cryptocurrency. Je doet kennis op over cryptografie.
 
+max.felis11@gmail.com
+Jeroen-Hendriks@outlook.com
