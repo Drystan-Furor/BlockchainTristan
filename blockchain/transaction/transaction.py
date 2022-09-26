@@ -30,3 +30,4 @@ class Transaction():
 
         else:
             return make_response(jsonify("Invalid input"), 400)
+

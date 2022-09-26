@@ -36,3 +36,7 @@ zien dat je beschikt over samenwerkings- en communicatieve vaardigheden
 en onderzoekend vermogen. Ondersteunend aan het ontwikkelen van de
 applicatie maak je kleine huiswerkopdrachten waarin je de theorie toepast in
 de praktijk
+
+
+
+
