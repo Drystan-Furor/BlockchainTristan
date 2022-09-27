@@ -21,9 +21,9 @@ class TestBlock:
                     "timestamp": "Sun, 18 Sep 2022 20:19:53 GMT"
                     }
                     ]
-        assert type(block.Block(1, "transaction").create_block(test_blockchain)) == dict
+        assert type(block.Block(1, "transaction").new_block(test_blockchain)) == dict
 
     def test_generate_block_empty_chain(self):
         
-        assert type(block.Block(1, "transaction").create_block([])) == dict
+        assert type(block.Block(1, "transaction").new_block([])) == dict
 

@@ -1,49 +1,39 @@
+from hashlib import sha256
+from merkletools import MerkleTools
 import json
-import datetime;
-import hashlib
-import random
-
-from ..validate_proof.validate_proof import ValidateProof
-
+import string
+import time
 
 class Block:
-    def __init__(self, index, transaction_data, previous_block_hash=''):
+    def __init__(self, index:int, txs:list, previous_hash:str, timestamp=None, nonce=0) -> None:
         self.index = index
-        self.transaction_data = transaction_data
-        self.previous_block_hash = previous_block_hash
-        self.current_timestamp = self.get_current_timestamp()
+        self.txs = txs or []
+        self.previous_hash = previous_hash
+        self.nonce = nonce
+        self.timestamp = timestamp or int(time.time())
+        self.merkle_root = None
+        self.merkle_root = self.create_merkle_root()
 
-    def create_block(self, blockchain):
-        previous_block = {}
+    def create_hash(self) -> str:
+        block_string = '{}{}{}{}{}'.format(
+            self.index, self.previous_hash, self.timestamp, self.nonce, self.merkle_root
+        )
+        return sha256(block_string.encode()).hexdigest()
 
-        if not blockchain:
-            previous_block['proof'] = 0
-        else:
-            previous_block = blockchain[-1]
+    def create_merkle_root(self) -> str:
+        if self.merkle_root is not None:
+            return self.merkle_root
 
-        return {
-            "index": self.index,
-            "timestamp": self.current_timestamp,
-            "data": self.transaction_data,
-            "proof": self.proof_of_work(previous_block),
-            "previous_block_hash": self.previous_block_hash,
-            "current_block_hash": self.hash_block_data(),
-        }
+        mt = MerkleTools(hash_type="SHA256")
 
-    def get_current_timestamp(self):
-        return datetime.datetime.now()
+        for tx in self.txs:
+            mt.add_leaf(tx.hash)
 
-    def hash_block_data(self):
-        block_data = json.dumps(
-            str(self.index) + json.dumps(self.transaction_data, indent=4, sort_keys=True, default=str) + str(
-                self.current_timestamp) + self.previous_block_hash).encode('utf-8')
-        return hashlib.sha256(block_data).hexdigest()
+        mt.make_tree()
 
-    def proof_of_work(self, last_block):
-        last_proof = last_block['proof']
-        timestamp = self.current_timestamp
+        self.merkle_root = mt.get_merkle_root()
 
-        proof = 0
-        while ValidateProof().valid_proof(last_proof, proof, timestamp) is False:
-            proof += 1
-        return proof
+        return self.merkle_root
+
+    def to_dict(self) -> dict:
+        return dict(index=self.index, txs=[tx.to_dict() for tx in self.txs], previous_hash=self.previous_hash, timestamp=self.timestamp, nonce=self.nonce, merkle_root=self.merkle_root)

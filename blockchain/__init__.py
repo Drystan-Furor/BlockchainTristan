@@ -1,4 +1,5 @@
 import os
+from uuid import uuid4
 
 from flask import Flask, jsonify, make_response, request
 from .blockchain.blockchain import Blockchain
@@ -8,11 +9,15 @@ from .validate_blockchain.validate_blockchain import ValidateBlockchain
 
 
 def create_app(test_config=None):
+    # Instantiate the Node
     app = Flask(__name__)
+
     blockchain = Blockchain()
     mempool = Mempool()
     transaction = Transaction(mempool)
     base_url = "/api/v1/"
+    # Generate a globally unique address for this node
+    node_identifier = str(uuid4()).replace('-', '')
 
     @app.get(base_url + 'block/create')
     def add_block_to_chain():
@@ -38,4 +43,6 @@ def create_app(test_config=None):
     def validate_blockchain():
         return ValidateBlockchain().validate(blockchain.list())
 
-    return app
+    @app.route('/mine', methods=['GET'])
+    def mine():
+        return Blockchain.mine()
