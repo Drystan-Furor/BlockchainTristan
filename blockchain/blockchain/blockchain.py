@@ -1,144 +1,67 @@
-from blockchain.block import Block
-from blockchain.transaction import Transaction
-
-from multiprocessing import Pool
-import os
-import time
-import sys
+import hashlib
 import json
-import logging
+from time import time
+from blockchain.block.block import Block
 
-from blockchain.transaction import Transaction
 
-class Blockchain:
-    difficulty = 1
-    max_workers = 2
-    pool = None
-    batch_size = int(2.5e5)
-    unconfirmed_transactions = []
-
-    def __init__(self) -> None:
-        self.pool = Pool(processes=Blockchain.max_workers)
+class Blockchain(object):
+    def __init__(self):
         self.chain = []
-        self.unconfirmed_transactions = []
+        self.current_transactions = []
 
-    def __str__(self):
-        return json.dumps(self.to_dict(), ensure_ascii=False)
+        # Create the genesis block
+        self.new_block(previous_hash=1, proof=100)
 
-    def __repr__(self):
-        return self.__str__()
+    def new_block(self, proof, previous_hash=None):
+        """
+        Create a new Block in the Blockchain
+        :param proof: <int> The proof given by the Proof of Work algorithm
+        :param previous_hash: (Optional) <str> Hash of previous Block
+        :return: <dict> New Block
+        """
 
-    def to_json(self):
-        return self.__str__()
+        block = {
+            'index': len(self.chain) + 1,
+            'timestamp': time(),
+            'transactions': self.current_transactions,
+            'proof': proof,
+            'previous_hash': previous_hash or self.hash(self.chain[-1]),
+        }
 
-    def to_dict(self):
-        return [block.to_dict() for block in self.chain]
+        # Reset the current list of transactions
+        self.current_transactions = []
+
+        self.chain.append(block)
+        return block
+
+    def new_transaction(self, sender, recipient, amount):
+        """
+        Creates a new transaction to go into the next mined Block
+        :param sender: <str> Address of the Sender
+        :param recipient: <str> Address of the Recipient
+        :param amount: <int> Amount
+        :return: <int> The index of the Block that will hold this transaction
+        """
+        self.current_transactions.append({
+            'sender': sender,
+            'recipient': recipient,
+            'amount': amount,
+        })
+
+        return self.last_block['index'] + 1
 
     @property
     def last_block(self):
         return self.chain[-1]
 
-    def add_block(self, block:Block, proof:str) -> bool:
-        if self.last_block.hash != block.previous_hash and len(self.chain) > 1:
-            print('last block hash does not match block previous hash')
-            return False
+    @staticmethod
+    def hash(block):
+        """
+        Creates a SHA-256 hash of a Block
+        :param block: <dict> Block
+        :return: <str>
+        """
 
-        if not self.validate_proof(block, proof):
-            print('invalid proof')
-            return False
-
-        block.hash = proof
-
-        self.chain.append(block)
-
-        return True
-
-    def create_first_block(self) -> Block:
-        genesis_block = Block(0, [Transaction('Hello'), Transaction('World')], "0")
-        genesis_block.nonce, genesis_block.hash = self.mine(genesis_block)
-        print(genesis_block.merkle_root)
-        self.chain.append(genesis_block)
-        return self.last_block
-
-    def validate_proof(self, block:Block, proof:str) -> bool:
-        return (proof.startswith('0' * Blockchain.difficulty) and proof == block.create_hash())
-
-    def validate_chain(self) -> bool:
-        is_valid = True
-        prev_hash = "0"
-
-        for block in self.chain:
-            proof = block.hash
-            delattr(block, "hash")
-
-            print(prev_hash)
-            print(block.previous_hash)
-
-            if not self.validate_proof(block, proof) or prev_hash != block.previous_hash:
-                is_valid = False
-                break
-
-            block.hash, prev_hash = proof, proof
-
-        return is_valid
-
-    def create_proof(block:Block, start_nonce:int, end_nonce:int) -> tuple:
-        block.nonce = start_nonce
-
-        hash = ''
-
-        print('Searched from %d to %d' % (start_nonce, end_nonce))
-
-        for nonce in range(start_nonce, end_nonce):
-            block.nonce = nonce
-            hash = block.create_hash()
-            if hash.startswith('0' * Blockchain.difficulty):
-                return (nonce, hash)
-
-        return None
-
-    def start_process(args) -> tuple:
-        block, nonce_range = args
-        return Blockchain.create_proof(block, nonce_range[0], nonce_range[1])
-
-    def mine(self, block:Block) -> tuple:
-        nonce = 0
-
-        while True:
-            nonce_ranges = [
-                (nonce + i * self.batch_size, nonce + (i+1) * self.batch_size)
-                for i in range(self.max_workers)
-            ]
-
-            params = [
-                (block, nonce_range) for nonce_range in nonce_ranges
-            ]
-
-            for result in self.pool.imap_unordered(Blockchain.start_process, params):
-                if result is not None:
-                    # Remove unconfirmed transactions
-                    self.unconfirmed_transactions = []
-                    return result
-
-            nonce += self.max_workers * self.batch_size
-
-    def mine_next(self) -> bool:
-
-        # Check if there are any transactions
-        if not self.unconfirmed_transactions:
-            return False
-
-        next_block = Block(self.last_block.index + 1, self.unconfirmed_transactions, self.last_block.hash)
-
-        next_block.nonce, proof = self.mine(next_block)
-
-        return self.add_block(next_block, proof)
-
-    # Add a transaction, very simplistic with no validation
-    def add_transaction(self, transaction:Transaction) -> bool:
-        self.unconfirmed_transactions.append(transaction)
-        return True
-
-    # Calling the class destructor to close the worker pool.
-    def __del__(self):
-        self.pool.close()
+        # We must make sure that the Dictionary is Ordered, or we'll have inconsistent hashes
+        block_string = json.dumps(block, sort_keys=True).encode()
+        return hashlib.sha256(block_string).hexdigest()

@@ -1,39 +1,46 @@
-from hashlib import sha256
-from merkletools import MerkleTools
 import json
-import string
-import time
+from time import time;
+import hashlib
+import random
 
 class Block:
-    def __init__(self, index:int, txs:list, previous_hash:str, timestamp=None, nonce=0) -> None:
+    def __init__(self, index, current_transaction, proof, previous_hash):
         self.index = index
-        self.txs = txs or []
+        self.timestamp = time()
+        self.current_transaction = current_transaction
         self.previous_hash = previous_hash
-        self.nonce = nonce
-        self.timestamp = timestamp or int(time.time())
-        self.merkle_root = None
-        self.merkle_root = self.create_merkle_root()
+        self.proof = proof
 
-    def create_hash(self) -> str:
-        block_string = '{}{}{}{}{}'.format(
-            self.index, self.previous_hash, self.timestamp, self.nonce, self.merkle_root
-        )
-        return sha256(block_string.encode()).hexdigest()
+        self.chain = []
 
-    def create_merkle_root(self) -> str:
-        if self.merkle_root is not None:
-            return self.merkle_root
+    @staticmethod
+    def hash(block):
+        """
+        Creates a SHA-256 hash of a Block
+        :param block: Block
+        """
+        # We must make sure that the Dictionary is Ordered, or we'll have inconsistent hashes
+        block_string = json.dumps(block, sort_keys=True).encode()
+        return hashlib.sha256(block_string).hexdigest()
 
-        mt = MerkleTools(hash_type="SHA256")
+    def new_block(self, proof, previous_hash):
+        """
+        Create a new Block in the Blockchain
+        :param proof: The proof given by the Proof of Work algorithm
+        :param previous_hash: Hash of previous Block
+        :return: New Block
+        """
 
-        for tx in self.txs:
-            mt.add_leaf(tx.hash)
+        block = {
+            'index': len(self.chain) + 1,
+            'timestamp': time(),
+            'transactions': self.current_transaction,
+            'proof': proof,
+            'previous_hash': previous_hash or self.hash(self.chain[-1]),
+        }
 
-        mt.make_tree()
+        # Reset the current list of transactions
+        self.current_transaction = []
 
-        self.merkle_root = mt.get_merkle_root()
-
-        return self.merkle_root
-
-    def to_dict(self) -> dict:
-        return dict(index=self.index, txs=[tx.to_dict() for tx in self.txs], previous_hash=self.previous_hash, timestamp=self.timestamp, nonce=self.nonce, merkle_root=self.merkle_root)
+        self.chain.append(block)
+        return block
