@@ -6,4 +6,4 @@
 6. Maak Proof of Work
 7. Toevoegen block via API
 8. Functies voor het valideren van de chain / blocks
-9. Consensus algoritme
+9. Consensus algoritme 
