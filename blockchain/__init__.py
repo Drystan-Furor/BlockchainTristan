@@ -2,10 +2,12 @@ import os
 from uuid import uuid4
 
 from flask import Flask, jsonify, make_response, request
-from .blockchain.blockchain import Blockchain
-from .mempool.mempool import Mempool
-from .transaction.transaction import Transaction
-from .validate_blockchain.validate_blockchain import ValidateBlockchain
+
+from blockchain.block.block import Block
+from blockchain.blockchain.blockchain import Blockchain
+from blockchain.mempool.mempool import Mempool
+from blockchain.transaction.transaction import Transaction
+from blockchain.validate_chain.valid_chain import ValidateChain
 
 
 def create_app(test_config=None):
@@ -13,36 +15,46 @@ def create_app(test_config=None):
     app = Flask(__name__)
 
     blockchain = Blockchain()
+    block = Block()
     mempool = Mempool()
     transaction = Transaction(mempool)
     base_url = "/api/v1/"
     # Generate a globally unique address for this node
     node_identifier = str(uuid4()).replace('-', '')
 
-    @app.get(base_url + 'block/create')
-    def add_block_to_chain():
-        return Blockchain.add_block(blockchain, mempool)
-
-    @app.get(base_url + 'blockchain/list')
-    def blockchain_index():
-        return Blockchain.list(blockchain)
-
-    @app.get(base_url + 'blockchain/reset')
-    def reset_blockchain():
-        return Blockchain.reset(blockchain)
-
-    @app.route(base_url + 'transaction/create', methods=['POST'])
-    def transaction_create():
-        return transaction.transaction_create(request.json)
-
-    @app.get(base_url + 'mempool/index')
-    def get_mempool():
-        return Mempool.index(mempool)
-
-    @app.get(base_url + 'blockchain/validate')
-    def validate_blockchain():
-        return ValidateBlockchain().validate(blockchain.list())
 
     @app.route('/mine', methods=['GET'])
     def mine():
         return Blockchain.mine()
+
+
+    @app.route('/transactions/new', methods=['POST'])
+    def new_transaction():
+        values = request.get_json()
+
+        # Check that the required fields are in the POST'ed data
+        required = ['sender', 'recipient', 'amount']
+        if not all(k in values for k in required):
+            return 'Missing values', 400
+
+        # Create a new Transaction
+        index = transaction.new_transaction(values['sender'], values['recipient'], values['amount'])
+
+        response = {'message': f'Transaction will be added to Block {index}'}
+        return jsonify(response), 201
+
+    @app.route('/chain', methods=['GET'])
+    def full_chain():
+        response = {
+            'chain': blockchain.chain,
+            'length': len(blockchain.chain),
+        }
+        return jsonify(response), 200
+
+    @app.route('/nodes/register', methods=['POST'])
+    def register_nodes(node_register=blockchain.nodes):
+        return node_register.RegisterNodes()
+
+    @app.route('/nodes/resolve', methods=['GET'])
+    def consensus():
+        return consensus.Consensus(blockchain)
