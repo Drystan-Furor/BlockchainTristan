@@ -14,21 +14,19 @@ def create_app(test_config=None):
     # Instantiate the Node
     app = Flask(__name__)
 
-    blockchain = Blockchain()
-    block = Block()
+    _blockchain = Blockchain()
     mempool = Mempool()
     transaction = Transaction(mempool)
-    base_url = "/api/v1/"
+    url = "/api/v1/"
+
     # Generate a globally unique address for this node
-    node_identifier = str(uuid4()).replace('-', '')
+    _node_identifier = str(uuid4()).replace('-', '')
 
+    @app.route(url + '/mine', methods=['GET'])
+    def mine(_blockchain, _node_identifier):
+        return _blockchain.mine(_node_identifier)
 
-    @app.route('/mine', methods=['GET'])
-    def mine():
-        return Blockchain.mine()
-
-
-    @app.route('/transactions/new', methods=['POST'])
+    @app.route(url + '/transactions/new', methods=['POST'])
     def new_transaction():
         values = request.get_json()
 
@@ -43,18 +41,14 @@ def create_app(test_config=None):
         response = {'message': f'Transaction will be added to Block {index}'}
         return jsonify(response), 201
 
-    @app.route('/chain', methods=['GET'])
-    def full_chain():
-        response = {
-            'chain': blockchain.chain,
-            'length': len(blockchain.chain),
-        }
-        return jsonify(response), 200
+    @app.route(url + '/chain', methods=['GET'])
+    def full_chain(_blockchain):
+        return _blockchain.full_chain(_blockchain)
 
-    @app.route('/nodes/register', methods=['POST'])
-    def register_nodes(node_register=blockchain.nodes):
-        return node_register.RegisterNodes()
+    @app.route(url + '/nodes/register', methods=['POST'])
+    def register_nodes(_blockchain):
+        return _blockchain.RegisterNodes()
 
-    @app.route('/nodes/resolve', methods=['GET'])
-    def consensus():
-        return consensus.Consensus(blockchain)
+    @app.route(url + '/nodes/resolve', methods=['GET'])
+    def consensus(_blockchain):
+        return consensus.Consensus(_blockchain)

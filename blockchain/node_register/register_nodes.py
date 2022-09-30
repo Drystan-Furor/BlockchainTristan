@@ -7,9 +7,9 @@ from blockchain.blockchain.blockchain import Blockchain
 
 class RegisterNodes:
     def __init__(self):
-        self.register_node = RegisterNode()
+        self.rn = RegisterNode()
 
-    def register_nodes(blockchain):
+    def register_nodes(self):
         values = request.get_json()
 
         nodes = values.get('nodes')
@@ -17,10 +17,10 @@ class RegisterNodes:
             return "Error: Please supply a valid list of nodes", 400
 
         for node in nodes:
-            blockchain.register_node(node)
+            self.rn.register_node(node)
 
         response = {
             'message': 'New nodes have been added',
-            'total_nodes': list(blockchain.nodes),
+            'total_nodes': list(_blockchain.nodes),
         }
         return jsonify(response), 201

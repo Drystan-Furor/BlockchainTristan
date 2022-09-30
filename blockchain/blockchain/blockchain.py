@@ -3,7 +3,7 @@ import requests
 from flask import jsonify
 
 from blockchain.block.block import Block
-from blockchain.transaction import transaction
+from blockchain.transaction.transaction import Transaction
 from blockchain.validate_chain.valid_chain import ValidateChain
 
 
@@ -11,33 +11,34 @@ class Blockchain(object):
     def __init__(self):
         self.chain = []
         self.current_transactions = []
-        self.genesis = Block()
+        self.block = Block()
         self.nodes = set()
         self.validChain = ValidateChain
+        self.transaction = Transaction()
 
         # Create the genesis block
-        self.genesis.new_block(previous_hash=1, proof=100)
+        self.block.new_block(previous_hash=1, proof=100)
 
     @property
     def last_block(self):
         return self.chain[-1]
 
-    def mine(previous_block=blockchain.last_block, block=None):
+    def mine(self, _node_identifier):
         # We run the proof of work algorithm to get the next proof...
-        last_block = blockchain.last_block
-        proof = previous_block.proof_of_work(last_block)
+        last_block = Blockchain.last_block
+        proof = self.block.proof_of_work(last_block)
 
         # We must receive a reward for finding the proof.
         # The sender is "0" to signify that this node has mined a new coin.
-        transaction.new_transaction(
+        self.transaction.new_transaction(
             sender="0",
-            recipient=node_identifier,
+            recipient=_node_identifier,
             amount=1,
         )
 
         # Forge the new Block by adding it to the chain
         previous_hash = Block().hash(last_block)
-        block = block.new_block(proof, previous_hash)
+        block = self.block.new_block(proof, previous_hash)
 
         response = {
             'message': "New Block Forged",
@@ -45,6 +46,13 @@ class Blockchain(object):
             'transactions': block['transactions'],
             'proof': block['proof'],
             'previous_hash': block['previous_hash'],
+        }
+        return jsonify(response), 200
+
+    def full_chain(self):
+        response = {
+            'chain': self.chain,
+            'length': len(self.chain),
         }
         return jsonify(response), 200
 
