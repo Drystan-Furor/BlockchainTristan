@@ -1,7 +1,5 @@
-import os
 from uuid import uuid4
-
-from flask import Flask, jsonify, make_response, request
+from flask import Flask
 
 from blockchain.block.block import Block
 from blockchain.blockchain.blockchain import Blockchain
@@ -15,8 +13,7 @@ def create_app(test_config=None):
     app = Flask(__name__)
 
     _blockchain = Blockchain()
-    mempool = Mempool()
-    transaction = Transaction(mempool)
+    # mempool = Mempool()
     url = "/api/v1/"
 
     # Generate a globally unique address for this node
@@ -28,18 +25,7 @@ def create_app(test_config=None):
 
     @app.route(url + '/transactions/new', methods=['POST'])
     def new_transaction():
-        values = request.get_json()
-
-        # Check that the required fields are in the POST'ed data
-        required = ['sender', 'recipient', 'amount']
-        if not all(k in values for k in required):
-            return 'Missing values', 400
-
-        # Create a new Transaction
-        index = transaction.new_transaction(values['sender'], values['recipient'], values['amount'])
-
-        response = {'message': f'Transaction will be added to Block {index}'}
-        return jsonify(response), 201
+        return new_transaction()
 
     @app.route(url + '/chain', methods=['GET'])
     def full_chain(_blockchain):

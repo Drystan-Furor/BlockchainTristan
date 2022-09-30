@@ -1,9 +1,10 @@
 from urllib.parse import urlparse
-from blockchain.blockchain import blockchain
+from blockchain.blockchain.blockchain import Blockchain
+
 
 class RegisterNode:
     def __init__(self):
-        self.nodes = blockchain
+        self.nodes = Blockchain()
 
     def register_node(self, address):
         """
