@@ -8,6 +8,7 @@ from blockchain.blockchain.blockchain import Blockchain
 class RegisterNodes:
     def __init__(self):
         self.rn = RegisterNode()
+        self.nodes = set()
 
     def register_nodes(self):
         values = request.get_json()
@@ -21,6 +22,6 @@ class RegisterNodes:
 
         response = {
             'message': 'New nodes have been added',
-            'total_nodes': list(_blockchain.nodes),
+            'total_nodes': list(self.nodes),
         }
         return jsonify(response), 201

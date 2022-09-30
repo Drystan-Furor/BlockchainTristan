@@ -12,7 +12,6 @@ class Blockchain(object):
         self.chain = []
         self.current_transactions = []
         self.block = Block()
-        self.nodes = set()
         self.validChain = ValidateChain
         self.transaction = Transaction()
 
