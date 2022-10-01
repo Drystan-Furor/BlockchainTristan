@@ -1,7 +1,7 @@
 import json
 from time import time
 import hashlib
-from blockchain.validate_proof.valid_proof import ValidProof
+from ..validate_proof.valid_proof import ValidProof
 import random
 
 

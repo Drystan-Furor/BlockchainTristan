@@ -1,5 +1,5 @@
 from urllib.parse import urlparse
-from blockchain.blockchain.blockchain import Blockchain
+from ..blockchain.blockchain import Blockchain
 
 
 class RegisterNode:

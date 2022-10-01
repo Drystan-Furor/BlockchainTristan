@@ -2,9 +2,9 @@ from urllib.parse import urlparse
 import requests
 from flask import jsonify
 
-from blockchain.block.block import Block
-from blockchain.transaction.transaction import Transaction
-from blockchain.validate_chain.valid_chain import ValidateChain
+from ..block.block import Block
+from ..transaction.transaction import Transaction
+from ..validate_chain.valid_chain import ValidateChain
 
 
 class Blockchain(object):

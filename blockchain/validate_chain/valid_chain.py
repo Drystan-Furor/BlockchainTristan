@@ -1,5 +1,5 @@
-from blockchain.validate_proof.valid_proof import ValidProof
-from blockchain.block.block import Block
+from ..validate_proof.valid_proof import ValidProof
+from ..block.block import Block
 
 
 class ValidateChain:

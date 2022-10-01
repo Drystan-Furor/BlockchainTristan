@@ -1,12 +1,8 @@
 from uuid import uuid4
 from flask import Flask
 
-from blockchain.block.block import Block
-from blockchain.blockchain.blockchain import Blockchain
-from blockchain.mempool.mempool import Mempool
-from blockchain.transaction.transaction import Transaction
-from blockchain.validate_chain.valid_chain import ValidateChain
-
+from ..blockchain.blockchain.blockchain import Blockchain
+from ..blockchain.mempool.mempool import Mempool
 
 def create_app(test_config=None):
     # Instantiate the Node

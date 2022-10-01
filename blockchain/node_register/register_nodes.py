@@ -1,5 +1,5 @@
 from flask import request, jsonify
-from blockchain.node_register.register_node import RegisterNode
+from ..node_register.register_node import RegisterNode
 
 
 class RegisterNodes:

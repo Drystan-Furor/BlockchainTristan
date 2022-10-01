@@ -1,6 +1,6 @@
 from flask import jsonify
 
-from blockchain.blockchain.blockchain import Blockchain
+from ..blockchain.blockchain import Blockchain
 
 
 class Consensus:
