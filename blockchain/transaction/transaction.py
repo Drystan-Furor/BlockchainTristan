@@ -17,7 +17,7 @@ class Transaction:
         # Create a new Transaction
         index = Transaction().create_new_transaction(values['sender'], values['recipient'], values['amount'])
 
-        # fmethode append to mempool
+        # methode append to mempool
 
         response = {'message': f'Transaction will be added to Block {index}'}
         return jsonify(response), 201
