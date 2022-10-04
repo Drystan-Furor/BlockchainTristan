@@ -1,89 +1,76 @@
-from urllib.parse import urlparse
-import requests
-from flask import jsonify
+from __future__ import annotations
 
-from ..block.block import Block
-from ..transaction.transaction import Transaction
-from ..validate_chain.valid_chain import ValidateChain
+from ..types import TransactionData
+from ..pool.pool import Pool
+from ..block.block import Block, BlockData
+from flask import jsonify, make_response, Response
 
 
-class Blockchain(object):
-    def __init__(self):
-        self.chain = []
-        self.current_transactions = []
-        self.block = Block()
-        self.validChain = ValidateChain
-        self.transaction = Transaction()
+class Chain:
+    def __init__(self, blockchain: list[BlockData] = []) -> None:
+        self.chain = blockchain
 
-        # Create the genesis block
-        self.block.new_block(previous_hash=1, proof=100)
-
-    @property
-    def last_block(self):
-        return self.chain[-1]
-
-    def mine(self, _node_identifier):
-        # We run the proof of work algorithm to get the next proof...
-        last_block = Blockchain.last_block
-        proof = self.block.proof_of_work(last_block)
-
-        # We must receive a reward for finding the proof.
-        # The sender is "0" to signify that this node has mined a new coin.
-        self.transaction.new_transaction(
-            sender="0",
-            recipient=_node_identifier,
-            amount=1,
-        )
-
-        # Forge the new Block by adding it to the chain
-        previous_hash = Block().hash(last_block)
-        block = self.block.new_block(proof, previous_hash)
-
-        response = {
-            'message': "New Block Forged",
-            'index': block['index'],
-            'transactions': block['transactions'],
-            'proof': block['proof'],
-            'previous_hash': block['previous_hash'],
-        }
-        return jsonify(response), 200
-
-    def full_chain(self):
-        response = {
-            'chain': self.chain,
-            'length': len(self.chain),
-        }
-        return jsonify(response), 200
-
-    def resolve_conflicts(self):
+    def generate(self, transaction: TransactionData) -> list[BlockData]:
         """
-        This is our consensus algorithm, it resolves conflicts
-        by replacing our chain with the longest one in the network.
-        :return: True if our chain was replaced, False if not
+        Build a new block or the Genesis block if needed
+        :param transaction: data of
+        timestamp: datetime
+        senderID: int
+        receiverID: int
+        amount: float
+        :return: chain ELSE Genesis block
         """
+        last_block: BlockData | None = None
+        if len(self.chain) > 0:
+            last_block = self.chain[-1]
 
-        neighbours = self.nodes
-        new_chain = None
+        genesis_block = Block(1, transaction).generate_block(last_block)
+        self.chain.append(genesis_block)
 
-        # We're only looking for chains longer than ours
-        max_length = len(self.chain)
+        return self.chain
 
-        # Grab and verify the chains from all the nodes in our network
-        for node in neighbours:
-            response = requests.get(f'https://{node}/chain')
+    def get_highest_value(self, transactions: list) -> TransactionData:
+        """
+        Get the transactions with the highest value
+        :param transactions: pool of unvalifated transactions
+        :return: transaction with most value / PoW
+        """
+        current_transaction = transactions[-1]
+        highest_value_transaction = current_transaction
 
-            if response.status_code == 200:
-                length = response.json()['length']
-                chain = response.json()['chain']
+        for t in transactions:
+            if t["amount"] > current_transaction["amount"]:
+                highest_value_transaction = t
 
-                # Check if the length is longer and the chain is valid
-                if length > max_length and self.validChain.valid_chain(chain):
-                    max_length = length
-                    new_chain = chain
+        return highest_value_transaction
 
-        # Replace our chain if we discovered a new, valid chain longer than ours
-        if new_chain:
-            self.chain = new_chain
-            return True
+    def appendBlock(self, pool: Pool) -> Response:
+        """
+        Add the block to the chain
+        :param pool: list of transactions
+        :return: extended list of transactions
+        """
+        if not pool.list:
+            return make_response(jsonify({"info": "current transactions amount = 0", "status": "500"}), 500)
 
-        return False
+        transaction = self.get_highest_value(pool.list)
+        pool.list.remove(transaction)
+
+        if not self.chain:
+            return make_response(jsonify(self.generate(transaction)), 200)
+
+        previous_block = self.chain[-1]
+        current_block = Block(previous_block["index"] + 1,
+                              transaction, previous_block["currentHash"]).generate_block(previous_block)
+        self.chain.append(current_block)
+
+        return make_response(jsonify(self.chain), 200)
+
+    def modify_memory(self) -> Response:
+        """
+        reset the blockchain
+        """
+        self.chain.clear()
+        return make_response(
+            jsonify({"Modify Memory": "https://roll20.net/compendium/dnd5e/Modify%20Memory#content",
+                     "status": "200"}), 200)
