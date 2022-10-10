@@ -12,7 +12,7 @@ class RegisterNodes:
 
         nodes = values.get('nodes')
         if nodes is None:
-            return "Error: Please supply a valid list of nodes", 400
+            return "Error: no list of valid nodes found", 400
 
         for node in nodes:
             self.rn.register_node(node)
