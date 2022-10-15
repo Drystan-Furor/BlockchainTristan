@@ -1,17 +1,19 @@
 # UTxO
 
-> The term UTXO stands for "Unspent Transaction Output".
+> De term UTXO staat voor "Unspent Transaction Output".
 
-It is basically a type of cryptocurrency recording method that is used to represent the number of tokens that a person receives after they make a transaction on the blockchain.
+Het is in feite een soort cryptocurrency-opnamemethode die wordt gebruikt om het aantal tokens weer te geven dat een persoon ontvangt nadat hij een transactie op de blockchain heeft gedaan.
 
-As the name suggests, UTXO is **the "unspent" output of the transaction.**
-> To put it simply, if you spend 5 BTC to buy an item for 3 BTC, then you will receive a new UTXO with a value of 2 BTC. We'll discuss this more in a bit.
+Zoals de naam al doet vermoeden, is UTXO **de "niet-uitgegeven" output van de transactie.**
+> Simpel gezegd, als u 5 BTC uitgeeft om een artikel voor 3 BTC te kopen, ontvangt u een nieuwe UTXO met een waarde van 2 BTC. We zullen dit zo meer bespreken.
 
 ---
-The concept of UTXO was first created and used by Satoshi Nakamoto on the Bitcoin blockchain. Later, the system was adopted by all forks of Bitcoin, including Bitcoin Cash (BCH), Litecoin (LTC), Zcash (ZEC), as well as several others that are not Bitcoin forks like Monero and Cardano. The purpose of UTXO is partly to check whether or not a certain wallet holds sufficient balance to make a requested transaction.
+Het concept van UTXO werd voor het eerst gemaakt en gebruikt door Satoshi Nakamoto op de Bitcoin-blockchain. Later werd het systeem overgenomen door alle vorken van Bitcoin, inclusief Bitcoin Cash (BCH), Litecoin (LTC), Zcash (ZEC), evenals verschillende andere die geen Bitcoin-vorken zijn, zoals Monero en Cardano. Het doel van UTXO is onder meer om te controleren of een bepaalde portemonnee voldoende saldo heeft om een gevraagde transactie uit te voeren.
 
-> For instance, if owner A wants to send 5 BTC to owner B, the network needs to know if owner A has at least 5 BTC in his wallet. If the balance is insufficient, it would be impossible to make the transaction.
+> Als eigenaar A bijvoorbeeld 5 BTC naar eigenaar B wil sturen, moet het netwerk weten of eigenaar A ten minste 5 BTC in zijn portemonnee heeft. Als het saldo onvoldoende is, is het onmogelijk om de transactie uit te voeren.
 
-Other than that, UTXO is also used **to make sure that no funds are spent twice**, hence eliminating the double-spending issue. Every UTXO can only be spent once, so if you spend the specific UTXO, you won't be able to use it again in the future. For each UTXO spent, one or more new UTXOs are created as a result of the transaction. The new UTXO will be sent to the appropriate wallet.
+Afgezien daarvan wordt UTXO ook gebruikt **om ervoor te zorgen dat geld niet twee keer wordt uitgegeven**, waardoor het probleem van dubbele uitgaven wordt geëlimineerd. Elke UTXO kan maar één keer worden uitgegeven, dus als u de specifieke UTXO uitgeeft, kunt u deze in de toekomst niet meer gebruiken. Voor elke uitgegeven UTXO worden als gevolg van de transactie een of meer nieuwe UTXO's gecreëerd. De nieuwe UTXO wordt naar de juiste portemonnee gestuurd.
 
-Put simply, you can think of UTXO as an indivisible and unique chunk of native tokens that are controlled by the owner's private keys.
+> Simpel gezegd, je kunt UTXO zien als een ondeelbaar en uniek stuk native tokens dat wordt beheerd door de privésleutels van de eigenaar.
+
+Een UTXO is een niet-uitgegeven transactie-output. Bij een geaccepteerde transactie in een geldig blockchain-betalingssysteem (zoals Bitcoin), kunnen alleen niet-uitgegeven outputs worden gebruikt als input voor een transactie. Wanneer een transactie plaatsvindt, worden invoer verwijderd en worden uitvoer gemaakt als nieuwe UTXO's die vervolgens in toekomstige transacties kunnen worden verbruikt.
