@@ -2,7 +2,7 @@
 
 > Een Blockchain is een *immutable, sequential* [Onveranderlijk] ketting van archieven of "records"
 Die we Blocks noemen, ketting is in het Engels "chain", aldus Blockchain.
-Ze kunnen transacties bevatten, bestanden, of andere data. het belangrijkste is dat de ze als ketting worden 
+Ze kunnen transacties bevatten, bestanden, of andere data. Het belangrijkste is dat deze als ketting worden 
 verbonden door het gebruik van *hashes*.
 
 hashfunctie
