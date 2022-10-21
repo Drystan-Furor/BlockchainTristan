@@ -1,18 +1,23 @@
-from datetime import datetime
-from typing import TypedDict
+from typing import Tuple, TypedDict
 
+class UtxoOutput(TypedDict):
+    id: str
+    hash: str
+    amount: float
+    isRemainder: bool
 
 class TransactionData(TypedDict):
-    timestamp: datetime
-    senderID: int
+    timestamp:  float
+    senderID:   int
     receiverID: int
-    amount: float
-
+    amount:     float
+    balance:    float
+    transactionOutput: Tuple[TransActionOutput, TransActionOutput] | None
 
 class BlockData(TypedDict):
-    index: int
-    timestamp: datetime
-    proof: int
-    priorHash: str
-    currentHash: str
-    transaction: TransactionData
+    index:        int
+    timestamp:    float
+    proof:        int
+    priorHash:    str
+    currentHash:  str
+    transaction:  TransactionData
