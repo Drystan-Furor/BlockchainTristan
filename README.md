@@ -1,6 +1,6 @@
 # Welcome
 
-To the ABC (Avans BlockChain) repo.
+To the Blockchain Tristan repo.
 
 # Setup your Python virtual environments
 Create a new Python virtual environment: `python -m venv _env`
@@ -31,16 +31,16 @@ wanneer de data (transactie) is aangemaakt.
 aangepast zal worden, dan kloppen de hashes en previuos hashes niet meer.
 
 # DevOps
-To satisfy the devops requirements assigned to me I have chosen follow a different path than assigned.  
-Because simply writing tests and having a 100% code coverage doesn't stop people from making stupid tests and not implementing certain safety features. Neither does it speed up developement.
+To satisfy the devops requirements I implemented end-to-end tests instead of unit-tests.
+Because simply writing tests still has human error margins and having a 100% code coverage doesn't stop people from not implementing certain safety features. It also bogs down developement.
 
 ## Static typing
-I have introduced static typing in this repository using mypy.  
+Static typing in this repository I have, using mypy.  
 Check the health of the repository using: `mypy ./blockchain/*.py`
 ### Why?
-Static typing allows a developer to see exactly what datatypes are expected everywhere.
+Static typing exactly states which datatypes are expected everywhere.
 This prevents easy to miss mistakes and improves overall maintainability and readability.
-All of which prevents unnecessary reliance on tests which often take a lot of time rewriting when functionality changes.
 
 ## E2E tests
-TODO
+Import the postman collection and test the endpoints via postman.
+These tests cover some parts of the application from front to end and check for expected behaviour.
