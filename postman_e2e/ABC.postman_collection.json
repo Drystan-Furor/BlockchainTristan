@@ -1,0 +1,192 @@
+{
+	"info": {
+		"_postman_id": "3e997b43-e05e-4123-ac8e-6f6c13072cfd",
+		"name": "ABC",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "poll pool",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"let transactionIttr = pm.environment.get(\"transactionItterration\");",
+							"transactionIttr = !transactionIttr? 0 : transactionIttr;",
+							"console.log(transactionIttr);",
+							"",
+							"if(transactionIttr === 0){",
+							"    pm.test(\"Response data matches expected\", function () {",
+							"        pm.expect(pm.response.json()).eql([])",
+							"    });",
+							"}",
+							"if(transactionIttr > 0 && transactionIttr < 3) {",
+							"    pm.test(\"Response body grows to include new requests\", function(){",
+							"        const resp = pm.response.json()",
+							"        const expectedAmount = parseInt(transactionIttr)",
+							"        pm.expect(resp.length).to.eql(expectedAmount);",
+							"    });",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}api/pool/poll",
+					"host": [
+						"{{baseURL}}api"
+					],
+					"path": [
+						"pool",
+						"poll"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "new transaction",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const transactions = {\"senderID\": [1,9,11,3], \"receiverID\":[15,20,13,2], \"amount\": [80.8,22,53,-111]};",
+							"",
+							"let ittr = 0;",
+							"ittr = pm.environment.get(\"transactionItterration\");",
+							"if(!ittr || ittr > 3){",
+							"    ittr = 0",
+							"}",
+							"",
+							"pm.environment.set(\"senderID\", transactions.senderID[ittr]);",
+							"pm.environment.set(\"receiverID\", transactions.receiverID[ittr]);",
+							"pm.environment.set(\"amount\", transactions.amount[ittr]);",
+							"",
+							"ittr =  parseInt(ittr) + 1;",
+							"",
+							"pm.environment.set(\"transactionItterration\", ittr);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"if(pm.environment.get(\"transactionItterration\") < 4){",
+							"    pm.test(\"Status code is 200\", function () {",
+							"        pm.response.to.have.status(200);",
+							"    });",
+							"",
+							"    pm.test(\"Response includes sent transaction data\", function(){",
+							"        const resp = pm.response.json()",
+							"        const senderID = pm.environment.get(\"senderID\")",
+							"        pm.expect(Object.values(resp).includes(senderID))",
+							"    });",
+							"} else {",
+							"    pm.test(\"Status code is 200\", function () {",
+							"        pm.response.to.have.status(400);",
+							"    });",
+							"",
+							"    pm.test(\"Response does not include faulty request\", function(){",
+							"        const resp = pm.response.json()",
+							"        const senderID = pm.environment.get(\"senderID\")",
+							"        pm.expect(!Object.values(resp).includes(senderID))",
+							"    });",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"senderID\": {{senderID}},\n    \"receiverID\": {{receiverID}},\n    \"amount\": {{amount}}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}api/transaction/new",
+					"host": [
+						"{{baseURL}}api"
+					],
+					"path": [
+						"transaction",
+						"new"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "new block",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}api/block/new",
+					"host": [
+						"{{baseURL}}api"
+					],
+					"path": [
+						"block",
+						"new"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "ittr",
+			"value": ""
+		},
+		{
+			"key": "transaction",
+			"value": ""
+		},
+		{
+			"key": "transactionItterration",
+			"value": ""
+		},
+		{
+			"key": "senderID",
+			"value": ""
+		},
+		{
+			"key": "receiverID",
+			"value": ""
+		},
+		{
+			"key": "amount",
+			"value": ""
+		}
+	]
+}

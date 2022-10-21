@@ -1,35 +1,61 @@
 # Transaction Validation
-> Transactie Validatie
+> [Transactie Validatie](https://www.ledger.com/academy/how-does-a-blockchain-transaction-work)
 
-## KeyPairs (openbaar en privé)
+![how does it work](https://www.ledger.com/wp-content/uploads/2022/01/cover-32.png)
+
+## KeyPairs (public en privat)
 
 >Het bitcoin-netwerk vereist dat alle gebruikers keypairs hebben. Een sleutelpaar bestaat uit één publieke en één private sleutel.
 
 Private keys zijn een enkel 256-bits nummer. Je kunt er zelf een maken of laten genereren. Van deze private key, wordt een public key gegenereerd met behulp van het Elliptic Curve Digital Signature Algorithm (ECDSA). De resulterende reeks getallen met een public key kan niet omgekeerd worden gebruikt om een private key te vinden. Dit nieuwe keypair wordt gebruikt om gegevens te coderen/decoderen en om gegevens te vergrendelen waarbij alleen de private key kan worden gebruikt om deze te ontgrendelen.
 
 ---
-## Basisverificatieproces
+## [Basisverificatieproces](https://www.deltecbank.com/2021/10/05/bitcoin-transaction-validation-what-exactly-goes-on-under-the-hood/?locale=en)
 
 > Bitcoin authenticeert transacties en afzenders met digitale handtekeningen die zijn gemaakt met behulp van sleutelparen. De afzender wil dat het juiste bitcoinbedrag naar de juiste persoon (portemonnee) wordt overgemaakt en de ontvanger wil ervoor zorgen dat de gegevens correct zijn en afkomstig zijn van de afzender.
 
-![418e78d8287c2c81880ba387a0981579.png](:/0fddf61ffae147fe86a69e89cfb6132a)
+![418e78d8287c2c81880ba387a0981579.png](https://www.deltecbank.com/wp-content/uploads/2021/10/pic2.jpg)
 
 1. De afzender heeft de te verzenden gegevens verzameld.
 2. Met behulp van de hash-functie wordt een 256-bit hash gemaakt.
-3. De afzender ondertekent de hash met zijn privésleutel, versleutelt deze en maakt een digitale handtekening
+3. De afzender ondertekent de hash met zijn privatekey, versleutelt deze en maakt een digitale handtekening
 
-- Op dit punt worden gegevens, de openbare sleutel en de digitale handtekening aan de ontvanger verstrekt.
+- Op dit punt worden gegevens, de public key en de digitale handtekening aan de ontvanger verstrekt.
 
-4. Wanneer de openbare sleutel wordt toegepast op de digitale handtekening, wordt stap 3 gerespecteerd en is de hash van stap 2 het resultaat.
+4. Wanneer de Public Key wordt toegepast op de digitale handtekening(Signature), wordt stap 3 gerespecteerd en is de hash van stap 2 het resultaat.
 5. De gegevens en de hash-functie worden toegepast en het resultaat is de hash (moet hetzelfde zijn als stap 2).
 6. De resultaten van stap 4 en 5 worden vergeleken, en indien correct, wordt de transactie geauthenticeerd; als dit niet het geval is (de gegevens zijn onjuist of de gebruikte openbare sleutel is onjuist), wordt deze afgewezen als een valse transactie.
+
+```mermaid
+sequenceDiagram
+    autonumber
+   Data->>hash-functie(): Encrypt Data
+		Note right of Data: Afzender verzameld <br> gegevens <br> Met de hash-functie een <br> 256-bit hash maken
+		hash-functie()->>PrivateKey: Signature
+		Note right of hash-functie(): Ondertekenen en versleutelen <br> met Private Key
+		PrivateKey->>Block:Encrypt Data+signature
+		Note right of PrivateKey: Data, PublicKey,<br> Signature->hash-functie()= <br> Block
+		Data-->>PublicKey: Transaction
+		PublicKey->>PrivateKey:Ontgrendelen
+		Note right of Block: PublicKey toepassen<br> op Signature
+		PrivateKey->>hash-functie(): Decryption: 
+		Note right of hash-functie(): hash === hash
+    loop decryption hash
+        hash-functie()->>PublicKey: Get hash result
+    end
+	Data->>PublicKey:Authneticated
+	Note left of Block: If hash === hash
+	Data->>Block:Cancelled
+	Note right of hash-functie(): hash !=== hash
+
+```
 
 ---
 ## The Bitcoin Transaction(receiving)
 
 Je besluit je oldtimer te verkopen en een koper (we noemen hem Nakamura) biedt aan je te betalen met bitcoin, dus je moet een bitcoin-adres opgeven. Je maakt een adres aan door jouw public key te hashen, wat resulteert in een“PubKeyHash” en dat omzetten naar een bitcoin-adres dat begint met een 1 of 3 met het base58check-formaat.
 
-![2fbe87fc5173134f1e37a5b9eac1f697.png](:/4938d48b423144e0bbc9fa76825c276f)
+![2fbe87fc5173134f1e37a5b9eac1f697.png](https://www.deltecbank.com/wp-content/uploads/2021/10/pic3.jpg)
 *U kunt de PublicKeyhash reverse engineeren vanaf het adres, maar u kunt de public key niet eens verkrijgen van de PublicKeyHash.*
 
 Met het opgegeven adres maakt Nakamura (uw autokoper) een transactie-output met daarin:
@@ -39,7 +65,7 @@ Met het opgegeven adres maakt Nakamura (uw autokoper) een transactie-output met 
 - PubKey Script vergrendelt het bedrag in uw PubKeyHash
 
 Wanneer u uiteindelijk de tien bitcoins wilt uitgeven, wordt uw privésleutel gebruikt om het PubKey-script te voeden en de ontvangen Bitcoin te ontgrendelen.
-![47be62012e376ef945e2f3e9be97337b.png](:/b69c2fc1f7f84405b980a2faabc6a406)
+![47be62012e376ef945e2f3e9be97337b.png](http://www.deltecbank.com/wp-content/uploads/2021/10/pic4.jpg)
 
 De transactie moet worden gevalideerd en gedolven door de miners (meestal binnen 10 minuten, maar soms langer) om te worden voltooid, en dan geeft uw wallet de storting van tien bitcoins aan. De wallet "bevat" het geld niet zoals een echte portemonnee; alleen een uitvoer die een niet-uitgegeven transactie-uitvoer (UTXO) wordt genoemd. UTXO's worden ontgrendeld wanneer u een deel of alle bitcoin naar een ander adres stuurt en een nieuwe UTXO maakt.
 
@@ -52,11 +78,11 @@ Als u een hoeveelheid satoshis verzendt, maakt u een nieuwe UTXO voor die transa
 
 Nu wil je die bitcoin van de autoverkoop uitgeven om een verzameling Pokémon-kaarten van Ash te kopen (hij heeft ze allemaal). Je creëert dus een nieuwe input en output.
 
-![946ab162124daae4f9435e82da143c24.png](:/971c01ac4b194c61beb1da79bd8ffadd)
+![946ab162124daae4f9435e82da143c24.png](https://www.deltecbank.com/wp-content/uploads/2021/10/pic5.jpg)
 
 ---
 ## Input:
-![b216c64daeca5f84a2d9452f86565fc8.png](:/77801f78e60241b0a4f077a77145589a)
+![b216c64daeca5f84a2d9452f86565fc8.png](https://www.deltecbank.com/wp-content/uploads/2021/10/pic6.jpg)
 
 U begint met de transactie-ID en Index om de UTXO en het PubKey-script van de verkoop van de auto te vinden (blauwe rechthoek hierboven).
 
@@ -71,7 +97,7 @@ Vervolgens maakt u een nieuw handtekeningscript aan dat bedoeld is om het PubKey
 Deze gegevens worden tweemaal gehasht met het SHA256-algoritme en ondertekend met uw privésleutel. Dit product wordt vervolgens toegevoegd aan uw openbare sleutel om het nieuwe handtekeningscript te maken. Oranje rechthoek hierboven
 
 ## Output
-![2a50c4398d57054f9ec44b0559ac1360.png](:/6f7966de4954449bb94bad1c0615b70b)
+![2a50c4398d57054f9ec44b0559ac1360.png](https://www.deltecbank.com/wp-content/uploads/2021/10/pic7-e1633466782776.jpg)
 
 Je output bevat de satoshi's die moeten worden overgedragen, een nieuwe index en een nieuw PubKey-script met het adres van Ash dat hij verstrekt om de bitcoin aan zijn adres te vergrendelen.
 
@@ -81,7 +107,7 @@ Je output bevat de satoshi's die moeten worden overgedragen, een nieuwe index en
 > Wanneer de transactie naar de miners wordt verzonden, nemen ze het **Signature Script** en voeren het uit met het **PubKey Script**. Met een "true" resultaat wordt de transactie toegevoegd aan het blok en vervolgens gevalideerd.
 
 ### The PubKey Script explained
-![9b97848c4f2a1f7de4717198997bf0be.png](:/8309affabd5f44d198fbb9fccf6b83e8)
+![9b97848c4f2a1f7de4717198997bf0be.png](https://www.deltecbank.com/wp-content/uploads/2021/10/pic8.jpg)
 
 Het PubKey-script gebruikt het volgende gestapelde proces van zes stappen om de transactie **(retourneer een T of F)** te verifiëren:
 
