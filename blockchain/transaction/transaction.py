@@ -32,3 +32,4 @@ class Transaction():
             return make_response(jsonify({"info": "Tasha's hideous laughter", "status": "400"}), 400)
 
         return self.pool.add_transaction_to_pool(transaction_data)
+

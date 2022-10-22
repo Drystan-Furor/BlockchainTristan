@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Tuple, TypedDict
 
 class UtxoOutput(TypedDict):
@@ -12,7 +14,7 @@ class TransactionData(TypedDict):
     receiverID: int
     amount:     float
     balance:    float
-    transactionOutput: Tuple[TransActionOutput, TransActionOutput] | None
+    transactionOutput: Tuple[UtxoOutput, UtxoOutput] | None
 
 class BlockData(TypedDict):
     index:        int
