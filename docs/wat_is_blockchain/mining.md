@@ -13,3 +13,11 @@ Bij publieke cryptocurrencies wordt er vaak voor gekozen om de transactiekosten 
 Op deze manier neemt de hoeveelheid  valuta in kwestie toe en wordt het  financieel interessant voor node-eigenaren om ermee aan de slag te gaan. Hier is echter een probleem. Veel spelers zullen als miners willen optreden, waardoor het moeilijk is om te beslissen welke van de vele gegenereerde blokken  als volgende moeten worden gekozen. Er zijn verschillende consensusvarianten ontwikkeld om dit probleem op te lossen.
 
 ![image](https://d1jnx9ba8s6j9r.cloudfront.net/blog/wp-content/uploads/2019/03/mining-pool-blockchain-mining-edureka.png)
+
+
+```
+{
+  "author": "Tristan",
+  "email": "artstristan@gmail.com",
+}
+```

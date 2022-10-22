@@ -33,3 +33,11 @@ Gebruikers kunnen een verzoek naar een andere partij sturen voor een bepaald bed
 - Swaps duurt een paar uur terwijl de transacties worden toegevoegd aan de blockchain van elke valuta. Als het echter langer dan zes uur duurt, moeten gebruikers contact opnemen met de klantenondersteuning.
 
 - Gebruikers kunnen ook crypto kopen of verkopen via de Buy Crypto-interface die beschikbaar is voor Blockchain Wallet. Koop- en verkoopservices zijn niet op alle locaties beschikbaar. Om een aankoop te doen, kan een gebruiker geld overboeken van een bank, een creditcard of betaalpas gebruiken of het beschikbare kassaldo gebruiken.
+
+
+```
+{
+  "author": "Jeroen",
+  "email": "Jeroen-Hendriks@outlook.com",
+}
+```

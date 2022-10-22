@@ -37,6 +37,23 @@ en onderzoekend vermogen. Ondersteunend aan het ontwikkelen van de
 applicatie maak je kleine huiswerkopdrachten waarin je de theorie toepast in
 de praktijk
 
-
+```
+{
+  "firstName": "Max",
+  "email": "max.felis11@gmail.com",
+}
+```
+```
+{
+  "firstName": "Jeroen",
+  "email": "Jeroen-Hendriks@outlook.com",
+}
+```
+```
+{
+  "firstName": "Tristan",
+  "email": "artstristan@gmail.com",
+}
+```
 
 

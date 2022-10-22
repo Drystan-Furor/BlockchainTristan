@@ -106,3 +106,12 @@ If you are having trouble with your tests:
 
 Check if there are any errors in your scripts. A red badge will highlight scripts with errors. You can also check the response section for specific errors.
 Debug your tests using the log statements to ensure that you are asserting on correct data.
+
+
+
+```
+{
+  "author": "Tristan",
+  "email": "artstristan@gmail.com",
+}
+```

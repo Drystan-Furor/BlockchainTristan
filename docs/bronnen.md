@@ -11,3 +11,11 @@ bitcoin.pdf
 Technologies. Amsterdam University Press. https://d28rh4a8wq0iu5.cloudfront.net/bitcointech/readings/
 princeton_bitcoin_book.pdf
 - Song, J. (2019). Programming Bitcoin: Learn How to Program Bitcoin from Scratch (1ste editie). O’Reilly Media.
+
+
+```
+{
+  "author": "Tristan",
+  "email": "artstristan@gmail.com",
+}
+```

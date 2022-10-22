@@ -95,3 +95,11 @@ graph TD
 - **Proof of stake:** deze is minder bekend en wordt gebruikt door Cardano, EOS.IO, Steem en Tezos. Dit is een methode waarbij miners zich aanbieden en de eerstvolgende miner wordt uitgekozen door een combinatie van rijkdom (of inzet), ouderdom van de portefeuille en kans. Het gaat er hierbij om dat de volgende miner ofwel het grootste belang heeft om een correct blok te genereren of zelfs het meest te verliezen heeft bij het aanbieden van een foutief block.
 - **Proof of authority**: hierbij worden zogenaamde validators aangesteld. Dit zijn nodes die controleren of een blok valide is. Dit gaat wel ten koste van het decentrale karakter van de blockchain aangezien het aanwijzen van validators van buitenaf wordt uitgevoerd. Het is daarom meer geschikt voor besloten blockchains.
 - **Proof of space:** deze is vergelijkbaar met proof of work, maar gebruikt opslagruimte in plaats van rekenkracht. In plaats van te blijven rekenen tot het blok gegenereerd is, worden willekeurige oplossingen gegenereerd die worden opgeslagen op de opslagruimte. Vervolgens worden alle gegenereerde blokken vergeleken met de puzzel.
+
+
+```
+{
+  "author": "Jeroen",
+  "email": "Jeroen-Hendriks@outlook.com",
+}
+```

@@ -17,3 +17,10 @@ Afgezien daarvan wordt UTXO ook gebruikt **om ervoor te zorgen dat geld niet twe
 > Simpel gezegd, je kunt UTXO zien als een ondeelbaar en uniek stuk native tokens dat wordt beheerd door de privésleutels van de eigenaar.
 
 Een UTXO is een niet-uitgegeven transactie-output. Bij een geaccepteerde transactie in een geldig blockchain-betalingssysteem (zoals Bitcoin), kunnen alleen niet-uitgegeven outputs worden gebruikt als input voor een transactie. Wanneer een transactie plaatsvindt, worden invoer verwijderd en worden uitvoer gemaakt als nieuwe UTXO's die vervolgens in toekomstige transacties kunnen worden verbruikt.
+
+```
+{
+  "author": "Max",
+  "email": "max.felis11@gmail.com",
+}
+```

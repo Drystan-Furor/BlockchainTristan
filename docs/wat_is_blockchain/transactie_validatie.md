@@ -123,3 +123,22 @@ Het PubKey-script gebruikt het volgende gestapelde proces van zes stappen om de 
 ## Overzicht
 
 Het Bitcoin-transactievalidatieproces is een reeks controles om ervoor te zorgen dat het netwerk nauwkeurig blijft en privacy mogelijk maakt door geen persoonlijke informatie te verzenden om transacties uit te voeren. Het transactieproces is bewezen een robuust systeem te zijn dat manipulatie kan voorkomen en vertrouwen kan geven aan de gebruikers.
+
+```
+{
+  "author": "Max",
+  "email": "max.felis11@gmail.com",
+}
+```
+```
+{
+  "author": "Jeroen",
+  "email": "Jeroen-Hendriks@outlook.com",
+}
+```
+```
+{
+  "author": "Tristan",
+  "email": "artstristan@gmail.com",
+}
+```

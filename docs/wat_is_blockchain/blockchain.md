@@ -1,5 +1,5 @@
 # Blockchain
-![dbfb4bfaeccee3ec602cc1d1a4a754f4.png](:/809eeb5868bc41a6b90a4db024702c6f)
+![dbfb4bfaeccee3ec602cc1d1a4a754f4.png](https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Blockchain.svg/300px-Blockchain.svg.png)
 
 Blockchain is een systeem voor het opslaan van gegevens in een reeks datablokken die niet kunnen worden gewijzigd. Blokken kunnen alleen aan het einde van een keten worden toegevoegd. Blokken bevatten vaak meerdere transacties die het resultaat zijn van broadcast-transactieverzoeken/-opdrachten. Alle volgende blokken moeten in aanmerking worden genomen voor de huidige status van de vermeldingen in het blok. Voor zover mogelijk door hun aard, aangezien deze blokken wijzigingen kunnen bevatten.
 
@@ -18,9 +18,19 @@ Die we Blocks noemen, ketting is in het Engels "chain", aldus Blockchain.
 Ze kunnen transacties bevatten, bestanden, of andere data. Het belangrijkste is dat deze als ketting worden
 verbonden door het gebruik van *hashes*.
 
-hashfunctie
-: Een hashfunctie is gewoon een functie die invoerwaarde inneemt en uit die invoer een
-uitvoerwaarde creëert die deterministisch is voor de invoerwaarde. Voor elke x-invoerwaarde
-ontvangt u altijd dezelfde y-uitvoerwaarde wanneer de hash-functie wordt uitgevoerd.
-Op deze manier heeft elke input een bepaalde output.
+```mermaid
+graph TD
 
+a{block}-->|hash| b{block}--> |hash|c{block}
+```
+
+
+hashfunctie
+: Een hashfunctie is gewoon een functie die invoerwaarde inneemt en uit die invoer een  uitvoerwaarde creëert die deterministisch is voor de invoerwaarde. Voor elke x-invoerwaarde ontvangt u altijd dezelfde y-uitvoerwaarde wanneer de hash-functie wordt uitgevoerd. Op deze manier heeft elke input een bepaalde output.
+
+```
+{
+  "author": "Max",
+  "email": "max.felis11@gmail.com",
+}
+```

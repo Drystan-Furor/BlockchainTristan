@@ -394,3 +394,12 @@ not it uses a compressed public key.
 ---
 **Some contributed definitions have been sourced under a CC-BY license from the bit‐
 coin Wiki or from other open source documentation sources.**
+
+
+
+```
+{
+  "author": "Jeroen",
+  "email": "Jeroen-Hendriks@outlook.com",
+}
+```

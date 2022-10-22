@@ -41,3 +41,11 @@ Aan de andere kant hoeven offline knooppunten alleen de meest recente kopie van 
 Een enkel knooppunt kan mogelijk een volledige blockchain bedienen, maar omdat het op een enkel apparaat wordt bewaard, is het bijzonder kwetsbaar voor stroomuitval, hackers en systeemstoringen. Hoe meer complete nodes een blockchain heeft, hoe beter hij bestand is tegen dergelijke rampen. Het zal voor een corrupte partij moeilijk zijn om alle blockchain-gegevens in één keer uit te wissen, aangezien de gegevens over zoveel machines zijn verspreid. Een enkel knooppunt kan mogelijk een volledige blockchain laten draaien, zelfs als een aanzienlijk aantal knooppunten offline valt en niet meer beschikbaar is als gevolg van een wereldwijde catastrofe.
 
 Zelfs als alle knooppunten vallen, is er maar één knooppunt met de hele blockchain-geschiedenis nodig om een back-up te maken en de toegang tot alle gegevens te herstellen.
+
+
+```
+{
+  "author": "Jeroen",
+  "email": "Jeroen-Hendriks@outlook.com",
+}
+```

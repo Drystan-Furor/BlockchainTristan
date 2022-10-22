@@ -15,3 +15,10 @@ Smart contracts kunnen voor meer toepassingen gebruikt worden, zoals voor
 
 Een gevaar van smart contracts is dat iedereen toegang kan hebben en daarmee ***interessant zijn voor hackers.*** De blockchain zelf is dan misschien niet te hacken, maar dat geldt niet voor de individuele smart contracts. **Elke functie van een contract moet dus zo geprogrammeerd worden, dat deze alleen vanaf een bevoegd account aangeroepen kan worden.** Daarnaast zijn de gegevens in smart contracts ook openbaar en voor iedereen te lezen. Dit laatste kan omzeild worden door data alleen versleuteld op te slaan.
 
+
+```
+{
+  "author": "Tristan",
+  "email": "artstristan@gmail.com",
+}
+```

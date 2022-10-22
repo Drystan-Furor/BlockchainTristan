@@ -21,3 +21,23 @@
 9. broadcast blocks
 10. Consensus algoritme 
 11. block reward
+
+
+```
+{
+  "firstName": "Max",
+  "email": "max.felis11@gmail.com",
+}
+```
+```
+{
+  "firstName": "Jeroen",
+  "email": "Jeroen-Hendriks@outlook.com",
+}
+```
+```
+{
+  "firstName": "Tristan",
+  "email": "artstristan@gmail.com",
+}
+```
