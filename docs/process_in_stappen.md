@@ -23,6 +23,18 @@
 11. block reward
 
 
+### over 9000
+1. [3,7 uur video's kijken tot en met video 37](https://www.youtube.com/channel/UCW7L2NGmFUEsZoPReKW_4iQ/videos)
+- En voor zover nog niet gedaan lees de hoofdstukken uit het boek van Song (zie voorbereiding bijeenkomst 3) Finite Fields en ECDSA /secp
+2. Sign & Validate inbouwen in Wallet, gebruik theorie Song om R en S te berekenen
+3. Transacties signeren en valideren
+- test voor het signeren van transactie met wallet
+- test valideren transactie door node
+4. Transacties broadcasten en valideren
+- nodes valideren de transactie en voegen die toe aan de mempool
+
+TODO wat moet gebeuren
+
 ```
 {
   "firstName": "Max",
