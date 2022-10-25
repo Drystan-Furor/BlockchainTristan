@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime
+import time
 import hashlib
 import json
 
@@ -10,13 +10,13 @@ from ..types import BlockData, TransactionData
 class Block:
     def __init__(self, index: int, transaction: TransactionData, previous_hash: str = "initial") -> None:
         self.index = index
-        self.timestamp = datetime.now()
+        self.timestamp = time.time()
         self.proof = 0
         self.previous_block_hash = previous_hash
         self.currentHash = ""
         self.transaction = transaction
 
-    def generate_block(self, previous_block: BlockData | None) -> BlockData:
+    def generate_block(self, previous_block: BlockData | None = None) -> BlockData:
         """
         Create a new Block in the Blockchain
         :param previous_block: Data of the previous Block
@@ -26,6 +26,8 @@ class Block:
 
         if previous_block:
             this_proof = previous_block["proof"]
+
+        self.proof = self.proof_of_work(this_proof)
 
         return {
             "index": self.index,
@@ -85,4 +87,4 @@ class Block:
 
         attempt = (str(previous_proof) + str(current_proof) + str(time)).encode()
         hashed_attempt = hashlib.sha256(attempt).hexdigest()
-        return hashed_attempt[:5] == "00000"
+        return hashed_attempt[:5] == "0000"
