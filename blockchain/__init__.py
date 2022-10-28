@@ -3,13 +3,13 @@ from flask import Flask, request, jsonify, make_response
 from .blockchain.validation import ChainValidation
 from .pool.transactionPool import TransactionPool
 from .transaction.transaction import Transaction
-from .blockchain.blockchain import Blockhain
+from .blockchain.blockchain import Blockchain
 from .pool.pool import Pool
 
 
 def create_app(test_config=None):
     server = Flask(__name__)
-    chain = Blockhain()
+    chain = Blockchain()
     pool = Pool()
     transaction_outputs = TransactionPool()
     transaction = Transaction(pool, transaction_outputs)
@@ -38,7 +38,7 @@ def create_app(test_config=None):
         new (genesis) block
         :return: route
         """
-        return Blockhain.appendBlock(chain, pool)
+        return Blockchain.appendBlock(chain, pool)
 
     @server.get(base_url + 'blockchain/reset')
     def modify_memory():
@@ -46,7 +46,7 @@ def create_app(test_config=None):
         reset blockchain / empty the truth / modify memories
         :return: route
         """
-        return Blockhain.modify_memory()
+        return Blockchain.modify_memory()
 
     @server.get(base_url + 'blockchain/poll')
     def poll_chain():

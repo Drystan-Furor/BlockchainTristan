@@ -31,7 +31,7 @@ class Block:
 
         return {
             "index": self.index,
-            "timestamp": datetime.now(),
+            "timestamp": time.time(),
             "proof": self.proof_of_work(this_proof),
             "priorHash": self.previous_block_hash,
             "currentHash": self.hash(),
@@ -73,7 +73,7 @@ class Block:
 
         return current_proof
 
-    def validate(self, previous_proof: int, current_proof: int, timestamp: datetime | None = None) -> bool:
+    def validate(self, previous_proof: int, current_proof: int, timestamp: time() | None = None) -> bool:
         """
         Validation of the proof
         :param previous_proof: data of proof of the last block
@@ -87,4 +87,4 @@ class Block:
 
         attempt = (str(previous_proof) + str(current_proof) + str(time)).encode()
         hashed_attempt = hashlib.sha256(attempt).hexdigest()
-        return hashed_attempt[:5] == "0000"
+        return hashed_attempt[:4] == "0000"

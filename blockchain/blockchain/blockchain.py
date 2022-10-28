@@ -6,7 +6,7 @@ from ..block.block import Block, BlockData
 from flask import jsonify, make_response, Response
 
 
-class Blockhain:
+class Blockchain:
     def __init__(self, blockchain: list[BlockData] = []) -> None:
         self.chain = blockchain
 
