@@ -1,9 +1,6 @@
-
-
 # Elliptic Curve Digital Signature Algorithm (ECDSA)
-> dit document bevat [KaTeX notation](https://katex.org/), bekijk het in [Joplin](https://joplinapp.org/).
 
-![Elliptische curve digitale handtekening algoritme](https://trustica.cz/wp-content/uploads/2018/06/frame-16644.png "ECDSA")
+![Elliptische curve digitale handtekening algoritme](https://trustica.cz/wp-content/uploads/2018/06/frame-16644.png)
 
 In cryptografie biedt het Elliptic Curve Digital Signature Algorithm (ECDSA) een variant van het Digital Signature Algorithm (DSA) dat elliptische kromme cryptografie gebruikt.
 ---
@@ -15,7 +12,8 @@ Net als bij cryptografie met elliptische krommen in het algemeen, is de bitgroot
 ## Sleutelgeneratie
 We genereren asymmetrische sleutels met behulp van de algoritmen voor sleutelovereenkomsten die cryptografie met elliptische krommen biedt. **Elliptische curve Diffie-Hellman (ECDH)** is een veelgebruikt algoritme voor sleutelovereenkomsten. Het proces van publiek-private sleutelgeneratie in ECDH als volgt:
 
-- Privésleutel: De privésleutel is een willekeurig gekozen getal $\ n_{p}$ zodat $\ n_{p}$ ligt in het interval 1 tot $\ n_o -1$, waarbij $\ n_o$ de volgorde is van de subgroep van de elliptische krommepunten, gegenereerd door het generatorpunt $\ G$
+- Privésleutel: De privésleutel is een willekeurig gekozen getal $\ n_{p}$ zodat $\ n_{p}$
+  ligt in het interval 1 tot $\ n_o -1$, waarbij $\ n_o$ de volgorde is van de subgroep van de elliptische krommepunten, gegenereerd door het generatorpunt $\ G$
 
 - Openbare sleutel: de openbare sleutel wordt gegeven als $\ P = n_pG$, waarbij $\ n_p$ de privésleutel is die hierboven willekeurig is geselecteerd, $\ G$ het generatorpunt van de elliptische curve is en $\ P$ de publieke sleutel.
 
@@ -107,9 +105,5 @@ Uitgebreide ECDSA-implementatie is met name handig in omgevingen met beperkte op
 
 ![a signing mechanism of ECDSA](https://www.researchgate.net/publication/341061276/figure/download/fig1/AS:962414149373966@1606468822740/a-Signing-mechanism-of-elliptic-curve-digital-signature-algorithm-b-Verification.png)
 
-```
-{
-  "author": "Tristan",
-  "email": "artstristan@gmail.com",
-}
-```
+---
+![extended ecdsa](https://realtimelogic.com/ba/doc/en/C/shark/ECDSA-SignVerify.jpg)
