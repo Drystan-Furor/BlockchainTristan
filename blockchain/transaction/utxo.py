@@ -14,8 +14,8 @@ class Utxo:
     def generate_key(self, balance: float, amount: float, is_remainder: bool) -> str:
         return hashlib.sha256(bytes(f"{balance}{str(is_remainder)}{amount}", 'utf-8')).hexdigest()
 
-    def generate_utxos(self, transaction: TransactionData) -> Tuple[UtxoOutput, UtxoOutput] | None:
-        remainder = self.validate_balance(transaction["balance"], transaction["amount"])
+    def generate_utxos(self, transaction: TransactionData, balance:float) -> Tuple[UtxoOutput, UtxoOutput] | None:
+        remainder = self.validate_balance(balance, transaction["amount"])
 
         if remainder < 0:
             return None
@@ -23,17 +23,23 @@ class Utxo:
         common_id = str(uuid.uuid4())
 
         output_transaction: UtxoOutput = {
-            "id": common_id,
-            "hash": self.generate_key(transaction["balance"], transaction["amount"], False),
-            "amount": transaction["amount"],
-            "isRemainder": False
+            "timestamp":    transaction["timestamp"],
+            "previousHash": transaction["inputHash"],
+            "id":           common_id,
+            "hash":         self.generateKey(balance, transaction["amount"], False),
+            "amount":       transaction["amount"],
+            "receiverID":   transaction["receiverID"],
+            "isRemainder":  False
         }
 
         output_remainder: UtxoOutput = {
-            "id": common_id,
-            "hash": self.generateKey(transaction["balance"], transaction["amount"], True),
-            "amount": remainder,
-            "isRemainder": True
+            "timestamp":    transaction["timestamp"],
+            "previousHash": transaction["inputHash"],
+            "id":           common_id,
+            "hash":         self.generate_key(balance, transaction["amount"], True),
+            "amount":       remainder,
+            "receiverID":   transaction["receiverID"],
+            "isRemainder":  True
         }
 
         return output_transaction, output_remainder

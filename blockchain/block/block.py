@@ -4,6 +4,8 @@ import time
 import hashlib
 import json
 
+from ..pool.transactionPool import TransactionPool
+from ..transaction.alphaHelper import AlphaTransaction
 from ..types import BlockData, TransactionData
 
 
@@ -16,26 +18,26 @@ class Block:
         self.currentHash = ""
         self.transaction = transaction
 
-    def generate_block(self, previous_block: BlockData | None = None) -> BlockData:
+    def generate_block(self, transactionPool:TransactionPool, previous_block: BlockData | None = None) -> BlockData:
         """
         Create a new Block in the Blockchain
         :param previous_block: Data of the previous Block
         :return: New Block
         """
-        this_proof: int = 0
+        global alphaTransaction
+        if not previous_block:
+            input = AlphaTransaction()
+            alphaTransaction = input.getAlphaTransaction()
 
-        if previous_block:
-            this_proof = previous_block["proof"]
-
-        self.proof = self.proof_of_work(this_proof)
+            transactionPool.appendTransactions(alphaTransaction["transactionOutput"])
 
         return {
             "index": self.index,
-            "timestamp": time.time(),
-            "proof": self.proof_of_work(this_proof),
-            "priorHash": self.previous_block_hash,
+            "timestamp": self.timestamp,
+            "proof": 0,
+            "priorHash": "AlphaBlock",
             "currentHash": self.hash(),
-            "transaction": self.transaction
+            "transaction": alphaTransaction
         }
 
     def convert(self, block_datafields: BlockData) -> None:
@@ -54,11 +56,7 @@ class Block:
         """
         Creates a SHA-256 hash of a Block
         """
-        block_data = json.dumps(str(self.index)
-                                + str(self.timestamp)
-                                + self.previous_block_hash
-                                + json.dumps(self.transaction, sort_keys=True, indent=4, default=str)).encode("utf-8")
-        return hashlib.sha256(block_data).hexdigest()
+        return hashlib.sha256(bytes(self.__str__(), 'utf-8')).hexdigest()
 
     def proof_of_work(self, previous_proof: int) -> int:
         """
@@ -88,3 +86,7 @@ class Block:
         attempt = (str(previous_proof) + str(current_proof) + str(time)).encode()
         hashed_attempt = hashlib.sha256(attempt).hexdigest()
         return hashed_attempt[:4] == "0000"
+
+    #omits current hash since this function is used to generate the current hash
+    def __str__(self) -> str:
+        return f"index: {self.index}, timestamp: {self.timestamp}, proof: {self.proof}, priorHash: {self.priorBlockHash}, transaction: ( timestamp: {self.transaction['timestamp']}, senderID: {self.transaction['senderID']}, receiverID: {self.transaction['receiverID']}, amount: {self.transaction['amount']})"

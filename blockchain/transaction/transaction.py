@@ -3,7 +3,10 @@ from typing import Any
 from flask import jsonify, make_response
 
 from .utxo import Utxo
+from .verification import TransactionVerification
 from ..pool.transactionPool import TransactionPool
+from ..transactionRequest import mockClient
+from ..transactionRequest.mockClient import Client
 from ..types import TransactionData
 from ..pool.pool import Pool
 
@@ -27,7 +30,9 @@ def create_transaction(self, required_fields: Any):
             "senderID": int(required_fields["senderID"]),
             "receiverID": int(required_fields["receiverID"]),
             "amount": float(required_fields["amount"]),
-            "balance": float(required_fields["balance"]),
+            "publicKey": str(required_fields["publicKey"]),
+            "signature": str(required_fields["signature"]),
+            "inputHash": str(TransactionData["inputHash"]),
             "transactionOutput": None
         }
     except:
@@ -38,11 +43,24 @@ def create_transaction(self, required_fields: Any):
         # perceives everything as hilariously funny and falls into fits of laughter
         return make_response(jsonify({"info": "Tasha's hideous laughter", "status": "400"}), 400)
 
+    #Temporarily mock a transaction, because there is no client currently
+    mockClient = Client()
+    transactionData = mockClient.pseudoTransaction
+
+    balance = self.chain.getBalanceByUid(transactionData["senderID"])
+
+    transactionVerification = TransactionVerification(transactionData, balance)
+    if not transactionVerification.verifyTransaction():
+        return make_response(jsonify({"info":"signature does not resolve", "status":"401"}), 401)
+
     input_object = Utxo()
-    outputs = input_object.generate_utxos(transaction_data)
+    outputs = input_object.generate_utxos(transactionData)
+    self.transactionOutputs.appendTransactions(outputs)
+    transactionData["transactionOutput"] = outputs
 
-    self.transactionOutputs.appendTransaction(outputs[0])
-    self.transactionOutputs.appendTransaction(outputs[1])
+    return self.pool.appendTransaction(transactionData)
 
-    transaction_data["transactionOutput"] = outputs
-    return self.pool.add_transaction_to_pool(transaction_data)
+
+
+
+

@@ -64,12 +64,36 @@ def create_app(test_config=None):
         """
         return ChainValidation().validate(chain)
 
-    @server.get(base_url + 'transactionOutputs/poll')
-    def pollTransactionOutputs():
+    @server.get(base_url + 'utxo/poll')
+    def poll_transaction_utxo():
+        """
+        get utxo outputs from transactions
+        :return: route
+        """
         return transaction_outputs.pollPool()
 
     @server.put(base_url + 'transactionOutputs/poll')
     def pollTransactionOutput():
+        """
+        get utxo outputs from transactions
+        :return: json
+        """
         return transaction_outputs.pollOutput(request.json)
+
+    @server.get(base_url + 'blockchain/length')
+    def getChainlength():
+        """
+        Get the length of the blockchain
+        :return: length route
+        """
+        return chain.getHeight()
+
+    @server.get(base_url + 'balance')
+    def getBalance():
+        """
+        get the balance
+        :return: route
+        """
+        return chain.getBalanceByUid(request.json)
 
     return server

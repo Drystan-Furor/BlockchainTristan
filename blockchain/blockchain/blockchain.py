@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from ..pool.transactionPool import TransactionPool
 from ..types import TransactionData
 from ..pool.pool import Pool
 from ..block.block import Block, BlockData
@@ -7,8 +8,9 @@ from flask import jsonify, make_response, Response
 
 
 class Blockchain:
-    def __init__(self, blockchain: list[BlockData] = []) -> None:
-        self.chain = blockchain
+    def __init__(self, transactionPool: TransactionPool) -> None:
+        self.chain:list[BlockData] = []
+        self.transactionPool = transactionPool
 
     def generate(self, transaction: TransactionData) -> list[BlockData]:
         """
@@ -74,3 +76,37 @@ class Blockchain:
         return make_response(
             jsonify({"Modify Memory": "https://roll20.net/compendium/dnd5e/Modify%20Memory#content",
                      "status": "200"}), 200)
+
+
+    def getLength(self) -> Response:
+        return make_response(jsonify({"info":len(self.chain)}), 200)
+
+    def balanceByTransactionOutput(self, transactionOutput:TransActionOutput) -> float:
+        result:float = transactionOutput["amount"]
+
+        for block in self.chain:
+            if transactionOutput["timestamp"] < block["transaction"]["timestamp"]:
+                break
+
+            if transactionOutput["receiverID"] == block["transaction"]["receiverID"]:
+                result = result + block["transaction"]["amount"]
+
+        return result
+
+    def balanceByUid(self, userID:int) -> float | None:
+        transactionRemainder = self.transactionPool.openRemainderByUid(userID)
+        if not transactionRemainder:
+            return None
+        return self.balanceByTransactionOutput(transactionRemainder)
+
+    def getBalanceByUid(self, balanceReq:Any):
+        try:
+            userID:float = float(balanceReq["userID"])
+        except:
+            return make_response(jsonify({"info":"malformed request", "status":"400"}), 400)
+
+        balance = self.balanceByUid(userID)
+        if not balance:
+            return make_response(jsonify({"info":"no transaction history found for this user", "status":"404"}), 404)
+
+        return make_response(jsonify({"balance":balance}), 200)
