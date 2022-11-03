@@ -1,18 +1,19 @@
 from __future__ import annotations
 
-from ..pool.transactionPool import TransactionPool
-from ..types import TransactionData
+from ..pool.pooloftransactions import PoolOfTransactions
+from ..transaction.utxo import Utxo
+from ..types import TransactionContent
 from ..pool.pool import Pool
 from ..block.block import Block, BlockData
 from flask import jsonify, make_response, Response
 
 
 class Blockchain:
-    def __init__(self, transactionPool: TransactionPool) -> None:
-        self.chain:list[BlockData] = []
+    def __init__(self, transactionPool: PoolOfTransactions) -> None:
+        self.chain: list[BlockData] = []
         self.transactionPool = transactionPool
 
-    def generate(self, transaction: TransactionData) -> list[BlockData]:
+    def generate(self, transaction: TransactionContent) -> list[BlockData]:
         """
         Build a new block or the Genesis block if needed
         :param transaction: data of
@@ -31,7 +32,7 @@ class Blockchain:
 
         return self.chain
 
-    def get_highest_value(self, transactions: list) -> TransactionData:
+    def get_highest_value(self, transactions: list) -> TransactionContent:
         """
         Get the transactions with the highest value
         :param transactions: pool of unvalifated transactions
@@ -77,36 +78,44 @@ class Blockchain:
             jsonify({"Modify Memory": "https://roll20.net/compendium/dnd5e/Modify%20Memory#content",
                      "status": "200"}), 200)
 
+    def get_length(self) -> Response:
+        """
+        get the length of the chain
+        :return: json list
+        """
+        return make_response(jsonify({"info": len(self.chain)}), 200)
 
-    def getLength(self) -> Response:
-        return make_response(jsonify({"info":len(self.chain)}), 200)
-
-    def balanceByTransactionOutput(self, transactionOutput:TransActionOutput) -> float:
-        result:float = transactionOutput["amount"]
-
+    def utxo_balance(self, transaction_output: Utxo) -> float:
+        """
+        walk the line
+        :param transaction_output: Utxo
+        :return: balance result
+        """
+        result: float = transaction_output["amount"]
         for block in self.chain:
-            if transactionOutput["timestamp"] < block["transaction"]["timestamp"]:
+            # break if not timestamp equals timestamp
+            if transaction_output["timestamp"] < block["transaction"]["timestamp"]:
                 break
 
-            if transactionOutput["receiverID"] == block["transaction"]["receiverID"]:
+            if transaction_output["receiverID"] == block["transaction"]["receiverID"]:
                 result = result + block["transaction"]["amount"]
 
         return result
 
-    def balanceByUid(self, userID:int) -> float | None:
-        transactionRemainder = self.transactionPool.openRemainderByUid(userID)
+    def balance_by_uid(self, userID: int) -> float | None:
+        transactionRemainder = self.transactionPool.open_remainder_by_uid(userID)
         if not transactionRemainder:
             return None
-        return self.balanceByTransactionOutput(transactionRemainder)
+        return self.utxo_balance(transactionRemainder)
 
-    def getBalanceByUid(self, balanceReq:Any):
+    def getBalanceByUid(self, balanceReq: Any):
         try:
-            userID:float = float(balanceReq["userID"])
+            userID: float = float(balanceReq["user_id"])
         except:
-            return make_response(jsonify({"info":"malformed request", "status":"400"}), 400)
+            return make_response(jsonify({"info": "malformed request", "status": "400"}), 400)
 
-        balance = self.balanceByUid(userID)
+        balance = self.balance_by_uid(userID)
         if not balance:
-            return make_response(jsonify({"info":"no transaction history found for this user", "status":"404"}), 404)
+            return make_response(jsonify({"info": "no transaction history found for this user", "status": "404"}), 404)
 
-        return make_response(jsonify({"balance":balance}), 200)
+        return make_response(jsonify({"balance": balance}), 200)

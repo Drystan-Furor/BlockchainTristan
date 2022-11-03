@@ -4,13 +4,13 @@ import time
 import hashlib
 import json
 
-from ..pool.transactionPool import TransactionPool
-from ..transaction.alphaHelper import AlphaTransaction
-from ..types import BlockData, TransactionData
+from ..pool.pooloftransactions import PoolOfTransactions
+from ..transaction.genesis_helper import genesis_transaction
+from ..types import BlockData, TransactionContent
 
 
 class Block:
-    def __init__(self, index: int, transaction: TransactionData, previous_hash: str = "initial") -> None:
+    def __init__(self, index: int, transaction: TransactionContent, previous_hash: str = "initial") -> None:
         self.index = index
         self.timestamp = time.time()
         self.proof = 0
@@ -18,39 +18,40 @@ class Block:
         self.currentHash = ""
         self.transaction = transaction
 
-    def generate_block(self, transactionPool:TransactionPool, previous_block: BlockData | None = None) -> BlockData:
+    def generate_block(
+            self,
+            transaction_pool:PoolOfTransactions,
+            previous_block: BlockData | None = None
+    ) -> BlockData:
         """
         Create a new Block in the Blockchain
+        :param transaction_pool: mempool of stored transactions
         :param previous_block: Data of the previous Block
         :return: New Block
         """
-        global alphaTransaction
         if not previous_block:
-            input = AlphaTransaction()
-            alphaTransaction = input.getAlphaTransaction()
+            input = genesis_transaction()
+            the_first_transaction = input.get_genesis_transaction()
 
-            transactionPool.appendTransactions(alphaTransaction["transactionOutput"])
+            transaction_pool.append_transactions(the_first_transaction["transaction_output"])
 
+            return {
+                "index": self.index,
+                "timestamp": self.timestamp,
+                "proof": 0,
+                "priorHash": "GenesisBlock",
+                "currentHash": self.hash(),
+                "transaction": the_first_transaction
+            }
+        self.proof = self.proof_of_work(previous_block["proof"])
         return {
-            "index": self.index,
-            "timestamp": self.timestamp,
-            "proof": 0,
-            "priorHash": "AlphaBlock",
-            "currentHash": self.hash(),
-            "transaction": alphaTransaction
+            "index":        self.index,
+            "timestamp":    self.timestamp,
+            "proof":        self.proof,
+            "priorHash":    self.previous_block_hash,
+            "currentHash":  self.hash(),
+            "transaction":  self.transaction
         }
-
-    def convert(self, block_datafields: BlockData) -> None:
-        """
-        JSON conversion to Object
-        :param block_datafields: Data of the Block
-        """
-        self.index = block_datafields["index"]
-        self.timestamp = block_datafields["timestamp"]
-        self.proof = block_datafields["proof"]
-        self.previous_block_hash = block_datafields["priorHash"]
-        self.currentHash = block_datafields["currentHash"]
-        self.transaction = block_datafields["transaction"]
 
     def hash(self) -> str:
         """
@@ -70,6 +71,18 @@ class Block:
             current_proof += 1
 
         return current_proof
+
+    def convert_json_to_object(self, block_datafields: BlockData) -> None:
+        """
+        JSON conversion to Object
+        :param block_datafields: Data of the Block
+        """
+        self.index = block_datafields["index"]
+        self.timestamp = block_datafields["timestamp"]
+        self.proof = block_datafields["proof"]
+        self.previous_block_hash = block_datafields["priorHash"]
+        self.currentHash = block_datafields["currentHash"]
+        self.transaction = block_datafields["transaction"]
 
     def validate(self, previous_proof: int, current_proof: int, timestamp: time() | None = None) -> bool:
         """

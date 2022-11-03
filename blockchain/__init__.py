@@ -1,7 +1,8 @@
 from flask import Flask, request, jsonify, make_response
 
-from .blockchain.validation import ChainValidation
-from .pool.transactionPool import TransactionPool
+from .blockchain.validation import BlockchainValidation
+from .nodes.registernode import RegisterNode
+from .pool.pooloftransactions import PoolOfTransactions
 from .transaction.transaction import Transaction
 from .blockchain.blockchain import Blockchain
 from .pool.pool import Pool
@@ -9,14 +10,14 @@ from .pool.pool import Pool
 
 def create_app(test_config=None):
     server = Flask(__name__)
-    chain = Blockchain()
     pool = Pool()
-    transaction_outputs = TransactionPool()
-    transaction = Transaction(pool, transaction_outputs)
+    node_register = RegisterNode()
+    transaction_outputs = PoolOfTransactions()
+    chain = Blockchain(transaction_outputs)
+    transaction = Transaction(pool, transaction_outputs, chain)
     base_url = "/api/"
 
     @server.get(base_url + 'pool/poll')
-
     def poll_pool():
         """
         get list from mempool == pool
@@ -62,7 +63,15 @@ def create_app(test_config=None):
         validation
         :return: route
         """
-        return ChainValidation().validate(chain)
+        return BlockchainValidation().validate(chain)
+
+    @server.get(base_url + 'blockchain/length')
+    def get_chain_length():
+        """
+        Get the length of the blockchain
+        :return: length route
+        """
+        return chain.get_length()
 
     @server.get(base_url + 'utxo/poll')
     def poll_transaction_utxo():
@@ -70,30 +79,42 @@ def create_app(test_config=None):
         get utxo outputs from transactions
         :return: route
         """
-        return transaction_outputs.pollPool()
+        return transaction_outputs.poll_pool()
 
     @server.put(base_url + 'transactionOutputs/poll')
-    def pollTransactionOutput():
+    def poll_transaction_output():
         """
         get utxo outputs from transactions
         :return: json
         """
-        return transaction_outputs.pollOutput(request.json)
+        return transaction_outputs.poll_output(request.json)
 
-    @server.get(base_url + 'blockchain/length')
-    def getChainlength():
+    @server.post(base_url + 'assert')
+    def incoming_chain():
         """
-        Get the length of the blockchain
-        :return: length route
+        assert chains
+        :return: json response
         """
-        return chain.getHeight()
+        isValid = BlockchainValidation().get_chain_validation(chain, request.json).ok
+
+        if not isValid:
+            return make_response(jsonify({"error": "chain validated unsuccessfully", "status": 400}), 400)
+        return make_response(jsonify({"info": "consolidation of chain successful", "status": 200}), 200)
 
     @server.get(base_url + 'balance')
-    def getBalance():
+    def get_balance():
         """
         get the balance
         :return: route
         """
         return chain.getBalanceByUid(request.json)
+
+    @server.get(base_url + 'consensus')
+    def get_chain_validation():
+        """
+        contact Legion, we reached consensus - Mass effect
+        :return: Geth life form
+        """
+        return BlockchainValidation().get_chain_validation(chain, request.json)
 
     return server

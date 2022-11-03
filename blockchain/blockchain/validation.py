@@ -1,14 +1,21 @@
 import time
+import json
+from typing import Any
 from flask import jsonify, make_response, Response
 
-from ..types import BlockData, TransactionData
+from ..types import BlockData, TransactionContent
 from ..blockchain.blockchain import Blockchain
 from ..block.block import Block
 
 
-class ChainValidation():
+class BlockchainValidation:
     def __init__(self) -> None:
-        genesis_transaction: TransactionData = {"timestamp": time.time(), "senderID": 0, "receiverID": 0, "amount": 0}
+        genesis_transaction: TransactionContent = {"timestamp": time.time(),
+                                                    "senderID": 0, "receiverID": 0,
+                                                    "amount": 0, "transaction_output": None,
+                                                    "publicKey": "mockString",
+                                                    "signature": "mockSignature",
+                                                    "inputHash": "mockHash"}
         self.block: Block = Block(0, genesis_transaction)
 
     def validate(self, blockchain: Blockchain) -> Response:
@@ -27,7 +34,7 @@ class ChainValidation():
             if i > 0:
                 prior_block_data = blockchain.chain[i - 1]
 
-            self.block.convert(block_data)
+            self.block.convert_json_to_object(block_data)
 
             if not self.validate_hash():
                 return make_response(jsonify({"info": "invalid block hash", "status": "500"}), 500)
@@ -52,7 +59,16 @@ class ChainValidation():
         """
         return self.block.currentHash == self.block.hash()
 
-    def validate_proof(self, previous_proof: int, current_proof: int, timestamp: datetime) -> bool:
+    def compare_hashes(self, current_block_previous_hash: str, previous_block_hash: str) -> bool:
+        """
+        comparison of hashのcodes
+        :param current_block_previous_hash:
+        :param previous_block_hash:
+        :return: boolean
+        """
+        return current_block_previous_hash == previous_block_hash
+
+    def validate_proof(self, previous_proof: int, current_proof: int, timestamp: float) -> bool:
         """
         proof of work validation
         :param previous_proof:
@@ -62,11 +78,11 @@ class ChainValidation():
         """
         return self.block.validate(previous_proof, current_proof, timestamp)
 
-    def compare_hashes(self, current_blockのprevious_hash: str, previous_block_hash: str) -> bool:
-        """
-        comparison of hash codes
-        :param current_blockのprevious_hash:
-        :param previous_block_hash:
-        :return: boolean
-        """
-        return current_blockのprevious_hash == previous_block_hash
+    def get_chain_validation(self, chain: Blockchain, chain_requirements: Any) -> Response:
+        try:
+            temp_chain = chain
+            incoming_chain = json.loads(chain_requirements)
+            temp_chain.chain = incoming_chain
+            return self.validate(temp_chain)
+        except:
+            return make_response(jsonify({"info": "failed deserialization of the request"}), 400)
