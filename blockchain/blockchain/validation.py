@@ -18,7 +18,7 @@ class BlockchainValidation:
                                                     "inputHash": "mockHash"}
         self.block: Block = Block(0, genesis_transaction)
 
-    def validate(self, blockchain: Blockchain) -> Response:
+    def validate_chain(self, blockchain: Blockchain) -> Response:
         """
         validation of blockchain
         :param blockchain: current chain
@@ -76,13 +76,13 @@ class BlockchainValidation:
         :param timestamp:
         :return: object
         """
-        return self.block.validate(previous_proof, current_proof, timestamp)
+        return self.block.validate_block(previous_proof, current_proof, timestamp)
 
     def get_chain_validation(self, chain: Blockchain, chain_requirements: Any) -> Response:
         try:
             temp_chain = chain
             incoming_chain = json.loads(chain_requirements)
             temp_chain.chain = incoming_chain
-            return self.validate(temp_chain)
+            return self.validate_chain(temp_chain)
         except:
             return make_response(jsonify({"info": "failed deserialization of the request"}), 400)

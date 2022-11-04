@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Any
+
 from ..pool.pooloftransactions import PoolOfTransactions
 from ..transaction.utxo import Utxo
 from ..types import TransactionContent
@@ -9,9 +11,9 @@ from flask import jsonify, make_response, Response
 
 
 class Blockchain:
-    def __init__(self, transactionPool: PoolOfTransactions) -> None:
+    def __init__(self, transaction_pool: PoolOfTransactions) -> None:
         self.chain: list[BlockData] = []
-        self.transactionPool = transactionPool
+        self.transactionPool = transaction_pool
 
     def generate(self, transaction: TransactionContent) -> list[BlockData]:
         """
@@ -47,7 +49,7 @@ class Blockchain:
 
         return highest_value_transaction
 
-    def appendBlock(self, pool: Pool) -> Response:
+    def append_block(self, pool: Pool) -> Response:
         """
         Add the block to the chain
         :param pool: list of transactions
@@ -102,19 +104,19 @@ class Blockchain:
 
         return result
 
-    def balance_by_uid(self, userID: int) -> float | None:
-        transactionRemainder = self.transactionPool.open_remainder_by_uid(userID)
-        if not transactionRemainder:
+    def balance_by_uid(self, user_id: int) -> float | None:
+        transaction_remainder = self.transactionPool.open_remainder_by_uid(user_id)
+        if not transaction_remainder:
             return None
-        return self.utxo_balance(transactionRemainder)
+        return self.utxo_balance(transaction_remainder)
 
-    def getBalanceByUid(self, balanceReq: Any):
+    def get_balance_by_uid(self, balance_requirements: Any):
         try:
-            userID: float = float(balanceReq["user_id"])
+            user_id: float = float(balance_requirements["user_id"])
         except:
             return make_response(jsonify({"info": "malformed request", "status": "400"}), 400)
 
-        balance = self.balance_by_uid(userID)
+        balance = self.balance_by_uid(user_id)
         if not balance:
             return make_response(jsonify({"info": "no transaction history found for this user", "status": "404"}), 404)
 

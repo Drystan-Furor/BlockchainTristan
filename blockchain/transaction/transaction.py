@@ -44,7 +44,7 @@ class Transaction():
             # perceives everything as hilariously funny and falls into fits of laughter
             return make_response(jsonify({"cast spell": "Tasha's hideous laughter", "status": "400"}), 400)
 
-        balance = self.chain.getBalanceByUid(TransactionContent["senderID"])
+        balance = self.chain.get_balance_by_uid(TransactionContent["senderID"])
         transaction_verification = VerifyTransaction(TransactionContent)
         if not transaction_verification.verify_transaction():
             return make_response(jsonify({"info": "resolving signature failed", "status": "401"}), 401)

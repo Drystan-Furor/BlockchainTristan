@@ -67,7 +67,7 @@ class Block:
         """
         current_proof: int = 0
 
-        while self.validate(previous_proof, current_proof) is False:
+        while self.validate_block(previous_proof, current_proof) is False:
             current_proof += 1
 
         return current_proof
@@ -84,7 +84,7 @@ class Block:
         self.currentHash = block_datafields["currentHash"]
         self.transaction = block_datafields["transaction"]
 
-    def validate(self, previous_proof: int, current_proof: int, timestamp: time() | None = None) -> bool:
+    def validate_block(self, previous_proof: int, current_proof: int, timestamp: time() | None = None) -> bool:
         """
         Validation of the proof
         :param previous_proof: data of proof of the last block

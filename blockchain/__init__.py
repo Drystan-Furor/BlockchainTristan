@@ -39,7 +39,7 @@ def create_app(test_config=None):
         new (genesis) block
         :return: route
         """
-        return Blockchain.appendBlock(chain, pool)
+        return Blockchain.append_block(chain, pool)
 
     @server.get(base_url + 'blockchain/reset')
     def modify_memory():
@@ -63,7 +63,7 @@ def create_app(test_config=None):
         validation
         :return: route
         """
-        return BlockchainValidation().validate(chain)
+        return BlockchainValidation().validate_chain(chain)
 
     @server.get(base_url + 'blockchain/length')
     def get_chain_length():
@@ -107,7 +107,7 @@ def create_app(test_config=None):
         get the balance
         :return: route
         """
-        return chain.getBalanceByUid(request.json)
+        return chain.get_balance_by_uid(request.json)
 
     @server.get(base_url + 'consensus')
     def get_chain_validation():
