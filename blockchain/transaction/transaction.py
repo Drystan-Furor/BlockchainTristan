@@ -9,7 +9,7 @@ from ..types import TransactionContent, UtxoOutput
 from ..pool.pool import Pool
 
 
-class Transaction():
+class Transaction:
     def __init__(self, pool: Pool, transaction_outputs: PoolOfTransactions, chain: Blockchain) -> None:
         self.pool = pool
         self.UtxoOutput = transaction_outputs
@@ -47,7 +47,7 @@ class Transaction():
             return make_response(jsonify({"info": "resolving signature failed", "status": "401"}), 401)
 
         TxID = Utxo()
-        utxos = TxID.generate_utxos(TransactionContent, balance)
+        utxos = TxID.generate_utxos(balance, TransactionContent)
         if not utxos:
             return make_response(jsonify({"Error": "no previous transactions detected", "status": "404"}), 404)
 

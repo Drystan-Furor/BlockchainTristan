@@ -17,6 +17,23 @@ def create_app(test_config=None):
     transaction = Transaction(pool, transaction_outputs, chain)
     base_url = "/api/"
 
+    @server.get(base_url + 'nodes/register')
+    def node_register(address=None):
+        """
+        register a node
+        :param address: str
+        :return: appended list
+        """
+        return node_register.register_node(address)
+
+    @server.get(base_url + 'nodes/list')
+    def poll_nodes():
+        """
+        get address list
+        :return: list of nodes
+        """
+        return node_register.get_nodes_list()
+
     @server.get(base_url + 'pool/poll')
     def poll_pool():
         """
