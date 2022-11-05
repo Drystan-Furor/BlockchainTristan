@@ -10,7 +10,7 @@ class UtxoOutput(TypedDict):
     hash: str
     amount: float
     receiverID: int
-    isRemainder: bool
+    is_remainder: bool
 
 
 class TransactionContent(TypedDict):
@@ -18,7 +18,7 @@ class TransactionContent(TypedDict):
     senderID: int
     receiverID: int
     amount: float
-    publicKey: str
+    publicKey: bytes
     signature: str
     inputHash: str
     transaction_output: Tuple[UtxoOutput, UtxoOutput] | None

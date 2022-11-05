@@ -5,7 +5,7 @@ import hashlib
 import json
 
 from ..pool.pooloftransactions import PoolOfTransactions
-from ..transaction.genesis_helper import genesis_transaction
+from ..transaction.genesis_helper import GenesisTransaction
 from ..types import BlockData, TransactionContent
 
 
@@ -20,7 +20,7 @@ class Block:
 
     def generate_block(
             self,
-            transaction_pool:PoolOfTransactions,
+            transaction_pool: PoolOfTransactions,
             previous_block: BlockData | None = None
     ) -> BlockData:
         """
@@ -30,7 +30,7 @@ class Block:
         :return: New Block
         """
         if not previous_block:
-            input = genesis_transaction()
+            input = GenesisTransaction()
             the_first_transaction = input.get_genesis_transaction()
 
             transaction_pool.append_transactions(the_first_transaction["transaction_output"])
@@ -45,12 +45,12 @@ class Block:
             }
         self.proof = self.proof_of_work(previous_block["proof"])
         return {
-            "index":        self.index,
-            "timestamp":    self.timestamp,
-            "proof":        self.proof,
-            "priorHash":    self.previous_block_hash,
-            "currentHash":  self.hash(),
-            "transaction":  self.transaction
+            "index": self.index,
+            "timestamp": self.timestamp,
+            "proof": self.proof,
+            "priorHash": self.previous_block_hash,
+            "currentHash": self.hash(),
+            "transaction": self.transaction
         }
 
     def hash(self) -> str:
@@ -92,14 +92,14 @@ class Block:
         :param timestamp: timestamp or None
         :return nonce
         """
-        time = self.timestamp
+        block_timestamp = self.timestamp
         if timestamp is not None:
-            time = timestamp
+            block_timestamp = timestamp
 
-        attempt = (str(previous_proof) + str(current_proof) + str(time)).encode()
+        attempt = (str(previous_proof) + str(current_proof) + str(block_timestamp)).encode()
         hashed_attempt = hashlib.sha256(attempt).hexdigest()
         return hashed_attempt[:4] == "0000"
 
-    #omits current hash since this function is used to generate the current hash
+    # omits current hash since this function is used to generate the current hash
     def __str__(self) -> str:
-        return f"index: {self.index}, timestamp: {self.timestamp}, proof: {self.proof}, priorHash: {self.priorBlockHash}, transaction: ( timestamp: {self.transaction['timestamp']}, senderID: {self.transaction['senderID']}, receiverID: {self.transaction['receiverID']}, amount: {self.transaction['amount']})"
+        return f"index: {self.index}, timestamp: {self.timestamp}, proof: {self.proof}, priorHash: {self.previous_block_hash}, transaction: ( timestamp: {self.transaction['timestamp']}, senderID: {self.transaction['senderID']}, receiverID: {self.transaction['receiverID']}, amount: {self.transaction['amount']})"

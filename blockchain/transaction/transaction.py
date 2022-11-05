@@ -15,9 +15,6 @@ class Transaction():
         self.UtxoOutput = transaction_outputs
         self.chain = chain
 
-    def create_transaction(self, json):
-        pass
-
     def create_transaction(self, required_fields: Any):
         """
         Transaction blueprint
@@ -31,7 +28,7 @@ class Transaction():
                 "senderID": int(required_fields["senderID"]),
                 "receiverID": int(required_fields["receiverID"]),
                 "amount": float(required_fields["amount"]),
-                "publicKey": str(required_fields["publicKey"]),
+                "publicKey": bytes(required_fields["publicKey"]),
                 "signature": str(required_fields["signature"]),
                 "inputHash": str(TransactionContent["inputHash"]),
                 "transaction_output": None

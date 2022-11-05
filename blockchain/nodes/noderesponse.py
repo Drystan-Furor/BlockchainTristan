@@ -17,6 +17,13 @@ class NodeResponse:
         self.register = nodes_registry
 
     def make_request(self, url: str, method: str = "get", body: str | None = None) -> Tuple[str, int]:
+        """
+        make a promise
+        :param url: str
+        :param method: get
+        :param body: str
+        :return: json or message
+        """
         try:
             response = requests.request(method, url, data=body)
             return json.loads(response.text), response.status_code
@@ -24,6 +31,13 @@ class NodeResponse:
             return "{'info':'HTTP request error occurred', 'status':500}", 500
 
     def poll_nodes(self, endpoint: str, method: str = "get", body: str | None = None) -> bool:
+        """
+        poll of nodes
+        :param endpoint:
+        :param method:
+        :param body:
+        :return:
+        """
         OKs: int = 0
 
         for node in self.register:

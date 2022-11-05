@@ -17,10 +17,20 @@ class Utxo:
         """
         return balance - amount
 
-    def generate_utxos(self, transaction: TransactionContent, balance: float) -> Tuple[UtxoOutput, UtxoOutput] | None:
+    def generate_key(self: float, amount: float, is_remainder: bool) -> str:
+        """
+        generate a key by hashing the content
+        :param self: float (balance)
+        :param amount: float
+        :param is_remainder: bool
+        :return: utxo key
+        """
+        return hashlib.sha256(bytes(f"{self}{amount}{str(is_remainder)}", 'utf-8')).hexdigest()
+
+    def generate_utxos(self, balance: float, transaction: TransactionContent) -> Tuple[UtxoOutput, UtxoOutput] | None:
         """
         create multiple transaction outputs to build a transaction
-        :param transaction: content
+        :param transaction: float
         :param balance: float
         :return:
         """
@@ -32,35 +42,23 @@ class Utxo:
         common_id = str(uuid.uuid4())
 
         output_transaction: UtxoOutput = {
-            "timestamp":    transaction["timestamp"],
+            "timestamp": transaction["timestamp"],
             "previousHash": transaction["inputHash"],
-            "id":           common_id,
-            "hash":         self.generate_key(balance, transaction["amount"], False),
-            "amount":       transaction["amount"],
-            "receiverID":   transaction["receiverID"],
-            "isRemainder":  False
+            "id": common_id,
+            "hash": self.generate_key(balance, transaction["amount"], False),
+            "amount": transaction["amount"],
+            "receiverID": transaction["receiverID"],
+            "is_remainder": False
         }
 
         output_remainder: UtxoOutput = {
-            "timestamp":    transaction["timestamp"],
+            "timestamp": transaction["timestamp"],
             "previousHash": transaction["inputHash"],
-            "id":           common_id,
-            "hash":         self.generate_key(balance, transaction["amount"], True),
-            "amount":       remainder,
-            "receiverID":   transaction["receiverID"],
-            "isRemainder":  True
+            "id": common_id,
+            "hash": self.generate_key(balance, transaction["amount"], True),
+            "amount": remainder,
+            "receiverID": transaction["receiverID"],
+            "is_remainder": True
         }
 
         return output_transaction, output_remainder
-
-    def generate_key(self, balance: float, amount: float, is_remainder: bool) -> str:
-        """
-        generate a key by hashing the content
-        :param balance: float
-        :param amount: float
-        :param is_remainder: bool
-        :return: utxo key
-        """
-        return hashlib.sha256(bytes(f"{balance}{str(is_remainder)}{amount}", 'utf-8')).hexdigest()
-
-

@@ -20,7 +20,7 @@ def create_app(test_config=None):
     @server.get(base_url + 'pool/poll')
     def poll_pool():
         """
-        get list from mempool == pool
+        get list from mempool == block pool
         :return: route
         """
         return make_response(jsonify(pool.list), 200)
@@ -47,7 +47,7 @@ def create_app(test_config=None):
         reset blockchain / empty the truth / modify memories
         :return: route
         """
-        return Blockchain.modify_memory()
+        return Blockchain.modify_memory(chain)
 
     @server.get(base_url + 'blockchain/poll')
     def poll_chain():
@@ -95,8 +95,7 @@ def create_app(test_config=None):
         assert chains
         :return: json response
         """
-        isValid = BlockchainValidation().get_chain_validation(chain, request.json).ok
-
+        isValid = BlockchainValidation().get_chain_validation(chain, request.json)
         if not isValid:
             return make_response(jsonify({"error": "chain validated unsuccessfully", "status": 400}), 400)
         return make_response(jsonify({"info": "consolidation of chain successful", "status": 200}), 200)
@@ -104,7 +103,7 @@ def create_app(test_config=None):
     @server.get(base_url + 'balance')
     def get_balance():
         """
-        get the balance
+        get the balance of the currency
         :return: route
         """
         return chain.get_balance_by_uid(request.json)

@@ -14,7 +14,7 @@
 2. Transaction class, input / output. verify, add, calculate fee
 3. UTXO && UTXOPool
 4. transaction validation
-5. balance API, code coverage
+5. self API, code coverage
 6. Node registration
 7. Block API return index/height
 8. p2p node construction

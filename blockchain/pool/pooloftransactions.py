@@ -6,7 +6,7 @@ from flask import jsonify, make_response, Response
 from ..types import UtxoOutput
 
 
-class PoolOfTransactions():
+class PoolOfTransactions:
     def __init__(self) -> None:
         self.list: list[UtxoOutput] = []
 
@@ -92,7 +92,7 @@ class PoolOfTransactions():
         :return: none
         """
         for transaction in self.list:
-            if transaction["receiverID"] == user_id and transaction["isRemainder"]:
+            if transaction["receiverID"] == user_id and transaction["is_remainder"]:
                 return transaction
         return None
 
@@ -104,5 +104,6 @@ class PoolOfTransactions():
         """
         result = self.open_remainder_by_uid(user_id)
         if not result:
-            return make_response(jsonify({"Error": "this user no open transactions to be found ", "status": "404"}), 404)
+            return make_response(jsonify(
+                {"Error": "no open transactions to be found for this user", "status": "404"}), 404)
         return make_response(jsonify(result))

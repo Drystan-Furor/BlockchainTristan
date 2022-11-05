@@ -6,7 +6,7 @@ from ..types import TransactionContent
 from ecdsa import SigningKey, NIST521p
 
 
-class genesis_transaction:
+class GenesisTransaction:
     def __init__(self) -> None:
         self.privateKey = SigningKey.generate(curve=NIST521p)
         self.publicKey = self.privateKey.get_verifying_key().to_string()
@@ -20,7 +20,7 @@ class genesis_transaction:
             "amount": 100,
             "publicKey": self.publicKey,
             "signature": self.privateKey.sign(hashstr),
-            "inputHash": "genesis_transaction",
+            "inputHash": "GenesisTransaction",
             "transaction_output": None
         }
 
