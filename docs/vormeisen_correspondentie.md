@@ -29,12 +29,11 @@ Onze vraagstelling omvat daarom ook dat wij met inachtneming van bovenstaande ge
 
 Wij willen graag a.d.v. onze samenwerking als team dan ook hiernaar streven. Hoewel het echter pas voor les 4 gepland staat willen wij niet in gebreke blijven om tijdig te communiceren in het belang van uw lessen. Daarbij vrezen wij dat als wij dit als programmeurs individueel moeten maken wij niet in staat zullen zijn om een kwalitatief product te leveren.
 
-
 Mochten er redenen zijn waarom bovenstaande niet mogelijk zou zijn willen wij daar ook graag tijdig over worden geïnformeerd, in belang van de tijd die wij al hebben gespendeerd als team aan dit project.
 
---
 Met Vriendelijke Groet
-Tristan Arts
+
+[Tristan Arts](https://drystan-furor.github.io/Portfolio/)
 
 
 ***
