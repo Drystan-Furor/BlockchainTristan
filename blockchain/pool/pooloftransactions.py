@@ -24,12 +24,12 @@ class PoolOfTransactions:
         :param  id_or_hash transaction output data
         :return: the data when needle is in mempool haystack
         """
-        for i, transactionOutput in enumerate(self.list):
-            if transactionOutput["id"] == id_or_hash:
-                return (i, transactionOutput)
+        for i, transaction_output in enumerate(self.list):
+            if transaction_output["id"] == id_or_hash:
+                return i, transaction_output
 
-            if transactionOutput["hash"] == id_or_hash:
-                return (i, transactionOutput)
+            if transaction_output["hash"] == id_or_hash:
+                return i, transaction_output
 
         return -1, None
 

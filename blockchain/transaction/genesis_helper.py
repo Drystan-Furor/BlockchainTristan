@@ -31,6 +31,5 @@ class GenesisTransaction:
                f"amount:{self.genesis_transaction['amount']}"
 
     def get_genesis_transaction(self):
-        utxo = Utxo()
-        self.genesis_transaction["transaction_output"] = utxo.generate_utxos(self.genesis_transaction)
+        self.genesis_transaction["transaction_output"] = Utxo.generate_utxos(self.genesis_transaction)
         return self.genesis_transaction

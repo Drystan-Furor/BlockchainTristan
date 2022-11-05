@@ -10,6 +10,22 @@ from ..block.block import Block, BlockData
 from flask import jsonify, make_response, Response
 
 
+def get_highest_value(transactions: list) -> TransactionContent:
+    """
+    Get the transactions with the highest value
+    :param transactions: pool of unvalifated transactions
+    :return: transaction with most value / PoW
+    """
+    current_transaction = transactions[-1]
+    highest_value_transaction = current_transaction
+
+    for t in transactions:
+        if t["amount"] > current_transaction["amount"]:
+            highest_value_transaction = t
+
+    return highest_value_transaction
+
+
 class Blockchain:
     def __init__(self, transaction_pool: PoolOfTransactions) -> None:
         self.chain: list[BlockData] = []
@@ -34,21 +50,6 @@ class Blockchain:
 
         return self.chain
 
-    def get_highest_value(self, transactions: list) -> TransactionContent:
-        """
-        Get the transactions with the highest value
-        :param transactions: pool of unvalifated transactions
-        :return: transaction with most value / PoW
-        """
-        current_transaction = transactions[-1]
-        highest_value_transaction = current_transaction
-
-        for t in transactions:
-            if t["amount"] > current_transaction["amount"]:
-                highest_value_transaction = t
-
-        return highest_value_transaction
-
     def append_block(self, pool: Pool) -> Response:
         """
         Add the block to the chain
@@ -58,7 +59,7 @@ class Blockchain:
         if not pool.list:
             return make_response(jsonify({"info": "current transactions amount = 0", "status": "500"}), 500)
 
-        transaction = self.get_highest_value(pool.list)
+        transaction = get_highest_value(pool.list)
         pool.list.remove(transaction)
 
         if not self.chain:

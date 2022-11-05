@@ -8,14 +8,24 @@ from ..blockchain.blockchain import Blockchain
 from ..block.block import Block
 
 
+def compare_hashes(current_block_previous_hash: str, previous_block_hash: str) -> bool:
+    """
+    comparison of hashのcodes
+    :param current_block_previous_hash:
+    :param previous_block_hash:
+    :return: boolean
+    """
+    return current_block_previous_hash == previous_block_hash
+
+
 class BlockchainValidation:
     def __init__(self) -> None:
         genesis_transaction: TransactionContent = {"timestamp": time.time(),
-                                                    "senderID": 0, "receiverID": 0,
-                                                    "amount": 0, "transaction_output": None,
-                                                    "publicKey": "mockString",
-                                                    "signature": "mockSignature",
-                                                    "inputHash": "mockHash"}
+                                                   "senderID": 0, "receiverID": 0,
+                                                   "amount": 0, "transaction_output": None,
+                                                   "publicKey": "mockString",
+                                                   "signature": "mockSignature",
+                                                   "inputHash": "mockHash"}
         self.block: Block = Block(0, genesis_transaction)
 
     def validate_chain(self, blockchain: Blockchain) -> Response:
@@ -35,7 +45,6 @@ class BlockchainValidation:
                 prior_block_data = blockchain.chain[i - 1]
 
             self.block.convert_json_to_object(block_data)
-
             if not self.validate_hash():
                 return make_response(jsonify({"info": "invalid block hash", "status": "500"}), 500)
 
@@ -46,8 +55,8 @@ class BlockchainValidation:
                                                                    block_data["timestamp"]):
                 return make_response(jsonify({"info": "invalid block proof", "status": "500"}), 500)
 
-            if block_data["index"] > 1 and not self.compare_hashes(block_data["priorHash"],
-                                                                   prior_block_data["currentHash"]):
+            if block_data["index"] > 1 and not compare_hashes(block_data["priorHash"],
+                                                              prior_block_data["currentHash"]):
                 return make_response(jsonify({"info": "hash mismatch", "status": "500"}), 500)
 
         return make_response(jsonify(blockchain), 200)
@@ -58,15 +67,6 @@ class BlockchainValidation:
         :return: validated current hash
         """
         return self.block.currentHash == self.block.hash()
-
-    def compare_hashes(self, current_block_previous_hash: str, previous_block_hash: str) -> bool:
-        """
-        comparison of hashのcodes
-        :param current_block_previous_hash:
-        :param previous_block_hash:
-        :return: boolean
-        """
-        return current_block_previous_hash == previous_block_hash
 
     def validate_proof(self, previous_proof: int, current_proof: int, timestamp: float) -> bool:
         """

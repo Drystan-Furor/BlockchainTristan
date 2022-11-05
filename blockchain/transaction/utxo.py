@@ -7,15 +7,17 @@ import uuid
 from ..types import UtxoOutput, TransactionContent
 
 
+def validate_balance(balance: float, amount: float) -> float:
+    """
+    balance validation, total minus current
+    :param balance: float
+    :param amount: float
+    :return: subtraction to get current
+    """
+    return balance - amount
+
+
 class Utxo:
-    def validate_balance(self, balance: float, amount: float) -> float:
-        """
-        balance validation, total minus current
-        :param balance: float
-        :param amount: float
-        :return: subtraction to get current
-        """
-        return balance - amount
 
     def generate_key(self: float, amount: float, is_remainder: bool) -> str:
         """
@@ -34,7 +36,7 @@ class Utxo:
         :param balance: float
         :return:
         """
-        remainder = self.validate_balance(balance, transaction["amount"])
+        remainder = validate_balance(balance, transaction["amount"])
 
         if remainder < 0:
             return None
