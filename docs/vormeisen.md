@@ -37,6 +37,14 @@ en onderzoekend vermogen. Ondersteunend aan het ontwikkelen van de
 applicatie maak je kleine huiswerkopdrachten waarin je de theorie toepast in
 de praktijk
 
+### herziening bijeenkomts 4
+Geef een heldere uitleg van ieder component van jouw blockchain applicatie (block, transactie, mining etc) in relatie tot het geheel aan de hand van code voorbeelden
+Criteria beoordeling eindpresentatie:
+- Je bent in staat om de werking van kerncomponenten van blockchain te kunnen uitleggen (aan de hand van code voorbeelden)
+- Je bent in staat om de werking van de blockchain API te kunnen uitleggen (aan de hand van code voorbeelden)
+- Je kunt uitleggen hoe het P2P netwerk werkt ook in relatie tot het consensus algoritme (aan de hand van code voorbeelden)
+- Je kunt uitleggen hoe je met de wallet transacties kunt initieren met de wallet in relatie met public key cryptografie  (aan de hand van code voorbeelden)
+
 ```
 {
   "firstName": "Max",
